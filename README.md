@@ -82,13 +82,13 @@ This is the simplest method.
 If you have the project in Git:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/saikiranbiradar0309/Automation_Popup_Project.git
 ```
 
 Then move into the project directory:
 
 ```bash
-cd techie-profile
+cd Automation_Popup_Project
 ```
 
 ### Step 2: Open `index.html`
@@ -96,7 +96,7 @@ cd techie-profile
 Open the following file:
 
 ```text
-techie-profile/index.html
+index.html
 ```
 
 You can simply double-click `index.html`.
@@ -111,7 +111,7 @@ This method is recommended for development and automation practice.
 
 ### Step 1: Open the project
 
-Open the `techie-profile` folder in VS Code.
+Open the `Automation_Popup_Project` folder in VS Code.
 
 ### Step 2: Install Live Server
 
