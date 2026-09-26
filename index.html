@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Techie Profile</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Background decorations -->
+    <div class="background-circle circle-1"></div>
+    <div class="background-circle circle-2"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+
+        <!-- Left Side -->
+        <div class="left-section">
+
+            <div class="logo">
+                <span>&lt;/&gt;</span> Techie
+            </div>
+
+            <div class="hero-content">
+
+                <p class="small-title">WELCOME TO TECHIE</p>
+
+                <h1>
+                    Build your
+                    <span>Developer</span>
+                    Profile
+                </h1>
+
+                <p class="description">
+                    Create your professional tech profile and showcase
+                    your developer identity in one place.
+                </p>
+
+                <div class="tech-stack">
+                    <span>HTML</span>
+                    <span>CSS</span>
+                    <span>JavaScript</span>
+                    <span>Automation</span>
+                    <span>Cloud</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Right Side -->
+        <div class="right-section">
+
+            <div class="profile-card">
+
+                <div class="card-header">
+
+                    <div class="profile-icon">
+                        👨‍💻
+                    </div>
+
+                    <div>
+                        <h2>Techie Profile</h2>
+                        <p>Create your account</p>
+                    </div>
+
+                </div>
+
+
+                <!-- Form -->
+                <form id="profileForm">
+
+                    <!-- Name -->
+                    <div class="input-group">
+
+                        <label for="name">Full Name</label>
+
+                        <input
+                            type="text"
+                            id="name"
+                            placeholder="Enter your name"
+                        >
+
+                    </div>
+
+
+                    <!-- Age -->
+                    <div class="input-group">
+
+                        <label for="age">Age</label>
+
+                        <input
+                            type="number"
+                            id="age"
+                            placeholder="Enter your age"
+                        >
+
+                    </div>
+
+
+                    <!-- Occupation -->
+                    <div class="input-group">
+
+                        <label for="occupation">Occupation</label>
+
+                        <select id="occupation">
+
+                            <option value="">
+                                Select occupation
+                            </option>
+
+                            <option value="Software Developer">
+                                Software Developer
+                            </option>
+
+                            <option value="DevOps Engineer">
+                                DevOps Engineer
+                            </option>
+
+                            <option value="QA Automation Engineer">
+                                QA Automation Engineer
+                            </option>
+
+                            <option value="SDET">
+                                SDET
+                            </option>
+
+                            <option value="Cloud Engineer">
+                                Cloud Engineer
+                            </option>
+
+                            <option value="Student">
+                                Student
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Contact -->
+                    <div class="input-group">
+
+                        <label for="contact">Contact Number</label>
+
+                        <input
+                            type="tel"
+                            id="contact"
+                            placeholder="Enter contact number"
+                        >
+
+                    </div>
+
+
+                    <!-- Email -->
+                    <div class="input-group">
+
+                        <label for="email">Email</label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="Enter email address"
+                        >
+
+                    </div>
+
+
+                    <!-- Password -->
+                    <div class="input-group">
+
+                        <label for="password">Password</label>
+
+                        <div class="password-container">
+
+                            <input
+                                type="password"
+                                id="password"
+                                placeholder="Enter password"
+                            >
+
+                            <button
+                                type="button"
+                                id="togglePassword"
+                            >
+                                👁
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Sign In -->
+                    <button
+                        type="submit"
+                        class="signin-btn"
+                    >
+                        Sign In
+                        <span>→</span>
+                    </button>
+
+                </form>
+
+
+                <!-- Test User -->
+                <div class="test-user">
+
+                    <div class="test-header">
+                        <span>🧪</span>
+                        <strong>Test User</strong>
+                    </div>
+
+                    <p>
+                        Use these credentials for testing:
+                    </p>
+
+                    <div class="credentials">
+
+                        <div>
+                            <span>Username</span>
+                            <strong id="testUsername">
+                                techie@test.com
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Password</span>
+                            <strong id="testPassword">
+                                Techie@123
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Success Popup -->
+
+    <div
+        class="modal-overlay"
+        id="successModal"
+    >
+
+        <div class="modal">
+
+            <button
+                class="close-btn"
+                id="closeModal"
+            >
+                ×
+            </button>
+
+            <div class="success-icon">
+                ✓
+            </div>
+
+            <h2>Welcome, Techie! 🎉</h2>
+
+            <p>
+                Your profile has been created successfully.
+            </p>
+
+            <div class="user-details">
+
+                <div>
+                    <span>Name</span>
+                    <strong id="displayName"></strong>
+                </div>
+
+                <div>
+                    <span>Age</span>
+                    <strong id="displayAge"></strong>
+                </div>
+
+                <div>
+                    <span>Occupation</span>
+                    <strong id="displayOccupation"></strong>
+                </div>
+
+                <div>
+                    <span>Contact</span>
+                    <strong id="displayContact"></strong>
+                </div>
+
+                <div>
+                    <span>Email</span>
+                    <strong id="displayEmail"></strong>
+                </div>
+
+            </div>
+
+            <button
+                class="done-btn"
+                id="doneBtn"
+            >
+                Continue
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>
