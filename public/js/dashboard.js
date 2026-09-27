@@ -23,10 +23,10 @@ async function initDashboard() {
         document.getElementById('welcomeMsg').textContent =
             `Welcome back, ${user.name}! Select a module from the sidebar to start practising.`;
 
-        // Check URL param for module
+        // Check URL param for module, default to 'welcome'
         const params = new URLSearchParams(window.location.search);
-        const mod    = params.get('module');
-        if (mod) switchPanel(mod);
+        const mod    = params.get('module') || 'welcome';
+        switchPanel(mod);
 
     } catch (e) {
         window.location.href = '/login';
@@ -73,10 +73,22 @@ function switchPanel(panelId) {
         item.classList.toggle('active', item.dataset.panel === panelId);
     });
 
-    // Show target panel
+    // Hide ALL panels first
     document.querySelectorAll('.module-panel').forEach(panel => {
-        panel.classList.toggle('active', panel.id === 'panel-' + panelId);
+        panel.classList.remove('active');
+        panel.style.display = 'none';
     });
+
+    // Show target panel explicitly
+    const targetPanel = document.getElementById('panel-' + panelId);
+    if (targetPanel) {
+        targetPanel.classList.add('active');
+        targetPanel.style.display = 'block';
+    }
+
+    // Scroll main content area back to top
+    const mainContent = document.getElementById('mainContent');
+    if (mainContent) mainContent.scrollTop = 0;
 
     // Update nav label
     document.getElementById('activeModuleLabel').textContent =
@@ -536,41 +548,116 @@ document.getElementById('getMultiSelect').addEventListener('click', () => {
 })();
 
 
+
 // ==========================================
-// ⑥ FRAMES
+// ⑥ FRAMES — inject content via JS (safe, no srcdoc parse issues)
 // ==========================================
 
+(function initFrames() {
+
+    // ── Single iFrame content
+    const singleFrame = document.getElementById('single-frame');
+    if (singleFrame) {
+        singleFrame.addEventListener('load', function () {
+            const doc = singleFrame.contentDocument || singleFrame.contentWindow.document;
+            doc.open();
+            doc.write(`<!DOCTYPE html><html><head><style>
+                body { margin:0; background:#0a1628; font-family:Inter,sans-serif; color:#f1f5f9; padding:24px; }
+                h3   { color:#93c5fd; margin-bottom:10px; }
+                p    { color:#94a3b8; font-size:14px; line-height:1.6; }
+                input { width:100%; padding:10px 14px; background:#020617; border:1px solid #334155; border-radius:8px; color:#f1f5f9; font-size:14px; margin-top:10px; outline:none; box-sizing:border-box; }
+                input:focus { border-color:#3b82f6; }
+                .chip { display:inline-block; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.3); border-radius:4px; padding:2px 8px; font-family:monospace; font-size:12px; color:#93c5fd; margin-top:6px; }
+            </style></head><body>
+                <h3>&#128205; You are inside a Single iFrame</h3>
+                <p>This content lives inside an iframe. Use driver.switchTo().frame('singleFrame') to access it.</p>
+                <input type="text" id="frame-input" name="frameInput" data-testid="frame-input" placeholder="Type something inside the frame...">
+                <div class="chip">iframe id=single-frame</div>
+            </body></html>`);
+            doc.close();
+        });
+        // Trigger the load by setting src to blank
+        singleFrame.src = 'about:blank';
+    }
+
+    // ── Outer (nested) iFrame content
+    const outerFrame = document.getElementById('outer-frame');
+    if (outerFrame) {
+        outerFrame.addEventListener('load', function () {
+            const doc = outerFrame.contentDocument || outerFrame.contentWindow.document;
+            doc.open();
+            doc.write(`<!DOCTYPE html><html><head><style>
+                body { margin:0; background:#071020; font-family:Inter,sans-serif; color:#f1f5f9; padding:20px; }
+                h3   { color:#6ee7b7; margin-bottom:8px; font-size:15px; }
+                p    { color:#94a3b8; font-size:13px; line-height:1.6; margin-bottom:12px; }
+                .chip { display:inline-block; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); border-radius:4px; padding:2px 8px; font-family:monospace; font-size:11px; color:#6ee7b7; }
+                .inner-wrap { border:2px solid rgba(110,231,183,0.3); border-radius:8px; overflow:hidden; }
+                iframe { display:block; width:100%; border:none; }
+            </style></head><body>
+                <h3>&#128994; Outer Frame &mdash; <span class="chip">id=outer-frame</span></h3>
+                <p>First switch to this frame, then switch to the inner frame below.</p>
+                <div class="inner-wrap">
+                    <iframe id="inner-frame" name="innerFrame" data-testid="inner-frame" height="130" src="about:blank"></iframe>
+                </div>
+                <script>
+                    const inner = document.getElementById('inner-frame');
+                    inner.addEventListener('load', function() {
+                        const d = inner.contentDocument || inner.contentWindow.document;
+                        d.open();
+                        d.write('<html><head><style>body{margin:0;background:#020617;font-family:Inter,sans-serif;color:#f1f5f9;padding:16px;}h4{color:#c4b5fd;margin-bottom:8px;font-size:14px;}p{color:#94a3b8;font-size:12px;}button{padding:8px 16px;background:linear-gradient(135deg,#3b82f6,#7c3aed);border:none;border-radius:6px;color:white;font-size:13px;cursor:pointer;margin-top:8px;}</style></head><body><h4>&#128995; Inner Frame &mdash; id=inner-frame</h4><p>switchTo().frame("outerFrame") &rarr; switchTo().frame("innerFrame")</p><button id="innerFrameBtn" data-testid="inner-frame-btn" onclick="this.textContent=\'&#9989; Clicked!\'">Click Me Inside!</button></body></html>');
+                        d.close();
+                    });
+                    inner.src = 'about:blank';
+                </script>
+            </body></html>`);
+            doc.close();
+        });
+        outerFrame.src = 'about:blank';
+    }
+
+})();
+
+// ── Dynamic Frame (loaded on button click)
 document.getElementById('loadDynamicFrame').addEventListener('click', function () {
     this.disabled    = true;
-    this.textContent = '⏳ Loading… (wait 2s)';
+    this.textContent = '&#9203; Loading\u2026 (wait 2s)';
 
     const container = document.getElementById('dynamicFrameContainer');
-    container.innerHTML = '<p style="font-size:13px; color:var(--text-muted);">Waiting for iframe to load…</p>';
+    container.innerHTML = '<p style="font-size:13px; color:var(--text-muted);">Waiting for iframe to load\u2026</p>';
 
     setTimeout(() => {
-        container.innerHTML = `
-            <div class="iframe-container">
-                <iframe
-                    id="dynamic-frame"
-                    name="dynamicFrame"
-                    data-testid="dynamic-frame"
-                    title="Dynamically loaded iframe"
-                    height="180"
-                    srcdoc="
-                        <style>
-                            body { margin:0; background:#0a1628; font-family:Inter,sans-serif; color:#f1f5f9; padding:20px; }
-                            h3 { color:#fcd34d; margin-bottom:8px; font-size:15px; }
-                            p  { color:#94a3b8; font-size:13px; }
-                            .chip { display:inline-block; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.3); border-radius:4px; padding:2px 8px; font-family:monospace; font-size:11px; color:#fcd34d; }
-                        </style>
-                        <h3>⚡ Dynamic iFrame — Loaded!</h3>
-                        <p>This iframe was dynamically injected after a 2-second delay.</p>
-                        <p>Practice: <span class='chip'>WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it('dynamicFrame'))</span></p>
-                    "
-                ></iframe>
-            </div>`;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'iframe-container';
+        const iframe = document.createElement('iframe');
+        iframe.id              = 'dynamic-frame';
+        iframe.name            = 'dynamicFrame';
+        iframe.dataset.testid  = 'dynamic-frame';
+        iframe.title           = 'Dynamically loaded iframe';
+        iframe.height          = '180';
+
+        iframe.addEventListener('load', function () {
+            const doc = iframe.contentDocument || iframe.contentWindow.document;
+            doc.open();
+            doc.write(`<!DOCTYPE html><html><head><style>
+                body { margin:0; background:#0a1628; font-family:Inter,sans-serif; color:#f1f5f9; padding:20px; }
+                h3   { color:#fcd34d; margin-bottom:8px; font-size:15px; }
+                p    { color:#94a3b8; font-size:13px; margin-bottom:6px; }
+                .chip { display:inline-block; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.3); border-radius:4px; padding:2px 8px; font-family:monospace; font-size:11px; color:#fcd34d; }
+            </style></head><body>
+                <h3>&#9889; Dynamic iFrame &mdash; Loaded!</h3>
+                <p>This iframe was dynamically injected after a 2-second delay.</p>
+                <p>Practice: <span class="chip">WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it('dynamicFrame'))</span></p>
+            </body></html>`);
+            doc.close();
+        });
+
+        iframe.src = 'about:blank';
+        wrapper.appendChild(iframe);
+        container.innerHTML = '';
+        container.appendChild(wrapper);
+
         this.disabled    = false;
-        this.textContent = '⚡ Load Dynamic iFrame';
+        this.textContent = '&#9889; Load Dynamic iFrame';
         showToast('Dynamic iframe loaded!', 'success');
     }, 2000);
 });

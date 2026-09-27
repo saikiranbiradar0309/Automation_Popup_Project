@@ -58,6 +58,11 @@
     box-sizing: border-box;
 }
 
+/* Force all sections to be scrollable */
+html, body {
+    min-height: 100vh;
+}
+
 html { scroll-behavior: smooth; }
 
 body {

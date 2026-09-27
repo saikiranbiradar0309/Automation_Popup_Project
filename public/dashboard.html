@@ -11,7 +11,7 @@
 
         /* ── LAYOUT ── */
 
-        body { overflow: hidden; }
+        body { overflow: hidden; height: 100vh; }
 
         .app-layout {
             display: flex;
@@ -212,6 +212,7 @@
         .module-panel {
             display: none;
             animation: fadeIn 0.3s ease;
+            min-height: 200px;
         }
 
         .module-panel.active { display: block; }
@@ -1400,20 +1401,6 @@
                             data-testid="single-frame"
                             title="Single iframe practice"
                             height="220"
-                            srcdoc="
-                                <style>
-                                    body { margin:0; background:#0a1628; font-family:Inter,sans-serif; color:#f1f5f9; padding:24px; }
-                                    h3 { color:#93c5fd; margin-bottom:10px; }
-                                    p  { color:#94a3b8; font-size:14px; line-height:1.6; }
-                                    input { width:100%; padding:10px 14px; background:#020617; border:1px solid #334155; border-radius:8px; color:#f1f5f9; font-size:14px; margin-top:10px; outline:none; box-sizing:border-box; }
-                                    input:focus { border-color:#3b82f6; }
-                                    .chip { display:inline-block; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.3); border-radius:4px; padding:2px 8px; font-family:monospace; font-size:12px; color:#93c5fd; margin-top:6px; }
-                                </style>
-                                <h3>📍 You are inside a Single iFrame</h3>
-                                <p>This content lives inside an iframe. Use driver.switchTo().frame('singleFrame') to access it.</p>
-                                <input type='text' id='frame-input' name='frameInput' data-testid='frame-input' placeholder='Type something inside the frame…'>
-                                <div class='chip'>iframe id=single-frame</div>
-                            "
                         ></iframe>
                     </div>
                 </div>
@@ -1434,37 +1421,6 @@
                             data-testid="outer-frame"
                             title="Outer nested iframe"
                             height="280"
-                            srcdoc="
-                                <style>
-                                    body { margin:0; background:#071020; font-family:Inter,sans-serif; color:#f1f5f9; padding:20px; }
-                                    h3  { color:#6ee7b7; margin-bottom:8px; font-size:15px; }
-                                    p   { color:#94a3b8; font-size:13px; line-height:1.6; margin-bottom:12px; }
-                                    .iframe-container { border:2px solid rgba(110,231,183,0.3); border-radius:8px; overflow:hidden; }
-                                    iframe { display:block; width:100%; border:none; }
-                                    .chip { display:inline-block; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); border-radius:4px; padding:2px 8px; font-family:monospace; font-size:11px; color:#6ee7b7; }
-                                </style>
-                                <h3>🟢 Outer Frame — <span class='chip'>id=outer-frame</span></h3>
-                                <p>First switch to this frame, then switch to the inner frame below.</p>
-                                <div class='iframe-container'>
-                                    <iframe
-                                        id='inner-frame'
-                                        name='innerFrame'
-                                        data-testid='inner-frame'
-                                        height='130'
-                                        srcdoc=\"
-                                            <style>
-                                                body { margin:0; background:#020617; font-family:Inter,sans-serif; color:#f1f5f9; padding:16px; }
-                                                h4 { color:#c4b5fd; margin-bottom:8px; font-size:14px; }
-                                                p  { color:#94a3b8; font-size:12px; }
-                                                button { padding:8px 16px; background:linear-gradient(135deg,#3b82f6,#7c3aed); border:none; border-radius:6px; color:white; font-size:13px; cursor:pointer; margin-top:8px; }
-                                            </style>
-                                            <h4>🟣 Inner Frame — id=inner-frame</h4>
-                                            <p>switchTo().frame('outerFrame') → switchTo().frame('innerFrame')</p>
-                                            <button id='innerFrameBtn' data-testid='inner-frame-btn' onclick=\\\"this.textContent='✅ Clicked!'\\\">Click Me Inside!</button>
-                                        \"
-                                    ></iframe>
-                                </div>
-                            "
                         ></iframe>
                     </div>
                 </div>
