@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AutomationLab Practice Dashboard – Selenium & Playwright">
+    <title>Dashboard – AutomationLab</title>
+    <link rel="stylesheet" href="css/global.css">
+    <style>
+
+        /* ── LAYOUT ── */
+
+        body { overflow: hidden; }
+
+        .app-layout {
+            display: flex;
+            height: 100vh;
+            padding-top: var(--nav-h);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── TOP NAV ── */
+
+        .top-nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: var(--nav-h);
+            background: rgba(2, 6, 23, 0.92);
+            border-bottom: 1px solid var(--border-subtle);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 1000;
+        }
+
+        .top-nav-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 17px;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .nav-brand .brand-icon {
+            width: 32px; height: 32px;
+            background: var(--grad-primary);
+            border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+        }
+
+        .nav-brand .brand-name span {
+            background: var(--grad-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-module-title {
+            padding: 4px 12px;
+            background: rgba(59,130,246,0.1);
+            border: 1px solid rgba(59,130,246,0.2);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #93c5fd;
+        }
+
+        .top-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-chip:hover { background: var(--bg-glass-hover); }
+
+        .user-avatar {
+            width: 26px; height: 26px;
+            background: var(--grad-primary);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .logout-btn {
+            padding: 7px 16px;
+            background: transparent;
+            border: 1px solid rgba(244,63,94,0.3);
+            border-radius: var(--radius-sm);
+            color: #fda4af;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background: rgba(244,63,94,0.1);
+            border-color: rgba(244,63,94,0.5);
+        }
+
+        /* ── SIDEBAR ── */
+
+        .sidebar {
+            width: var(--sidebar-w);
+            min-width: var(--sidebar-w);
+            height: 100%;
+            background: rgba(5, 10, 30, 0.95);
+            border-right: 1px solid var(--border-subtle);
+            overflow-y: auto;
+            padding: 20px 0;
+            flex-shrink: 0;
+        }
+
+        .sidebar-section-label {
+            padding: 0 18px 8px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 18px;
+            margin: 2px 10px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border: 1px solid transparent;
+            position: relative;
+        }
+
+        .sidebar-item:hover {
+            background: var(--bg-glass);
+            color: var(--text-primary);
+        }
+
+        .sidebar-item.active {
+            background: rgba(59,130,246,0.12);
+            border-color: rgba(59,130,246,0.25);
+            color: var(--text-primary);
+        }
+
+        .sidebar-item.active .sidebar-icon {
+            filter: none;
+        }
+
+        .sidebar-icon {
+            font-size: 18px;
+            width: 22px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .sidebar-badge {
+            margin-left: auto;
+            font-size: 10px;
+            padding: 2px 7px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--border-subtle);
+            margin: 12px 18px;
+        }
+
+        /* ── MAIN CONTENT ── */
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px 36px;
+        }
+
+        /* ── MODULE PANEL ── */
+
+        .module-panel {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .module-panel.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .module-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .module-icon-wrap {
+            width: 58px; height: 58px;
+            border-radius: var(--radius-md);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .module-header-text h1 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .module-header-text p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        /* ── PRACTICE BLOCK ── */
+
+        .practice-block {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+
+        .practice-block-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .practice-block-title {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .practice-block-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* ── WELCOME PANEL ── */
+
+        .welcome-hero {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .welcome-hero .hero-emoji {
+            font-size: 64px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .welcome-hero h1 {
+            font-size: 34px;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+
+        .welcome-hero h1 span {
+            background: var(--grad-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-hero p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 520px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+        }
+
+        .welcome-modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .welcome-module-card {
+            padding: 20px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .welcome-module-card:hover {
+            border-color: rgba(59,130,246,0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(59,130,246,0.1);
+        }
+
+        .welcome-module-card .wm-icon { font-size: 32px; margin-bottom: 10px; display: block; }
+        .welcome-module-card .wm-name { font-size: 13px; font-weight: 600; }
+        .welcome-module-card .wm-tag  { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+        /* ── CALENDAR ── */
+
+        .calendar-wrap {
+            background: rgba(2, 6, 23, 0.6);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            max-width: 380px;
+        }
+
+        .cal-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .cal-nav button {
+            width: 34px; height: 34px;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .cal-nav button:hover { background: var(--bg-glass-hover); }
+
+        .cal-month-year {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .cal-day-label {
+            text-align: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            padding: 6px 0;
+        }
+
+        .cal-day {
+            text-align: center;
+            padding: 8px 4px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .cal-day:hover { background: var(--bg-glass); }
+        .cal-day.disabled { color: var(--text-muted); cursor: not-allowed; }
+        .cal-day.disabled:hover { background: none; }
+        .cal-day.today { border-color: rgba(59,130,246,0.4); color: #93c5fd; font-weight: 600; }
+        .cal-day.selected { background: var(--grad-primary); color: white; border-color: transparent; }
+        .cal-day.in-range { background: rgba(59,130,246,0.15); }
+
+        /* ── DROPZONE ── */
+
+        .dropzone {
+            border: 2px dashed rgba(59,130,246,0.3);
+            border-radius: var(--radius-md);
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: rgba(59,130,246,0.03);
+        }
+
+        .dropzone:hover,
+        .dropzone.drag-over {
+            border-color: rgba(59,130,246,0.6);
+            background: rgba(59,130,246,0.06);
+        }
+
+        .dropzone .dz-icon { font-size: 40px; margin-bottom: 12px; display: block; }
+        .dropzone .dz-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+        .dropzone .dz-sub { font-size: 12px; color: var(--text-muted); }
+
+        .file-list {
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: rgba(2,6,23,0.7);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+        }
+
+        .file-item-left { display: flex; align-items: center; gap: 10px; }
+        .file-item-name { font-weight: 500; }
+        .file-item-size { font-size: 11px; color: var(--text-muted); }
+
+        .file-remove {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            transition: var(--transition);
+        }
+
+        .file-remove:hover { color: var(--accent-rose); }
+
+        /* ── IFRAME ── */
+
+        .iframe-container {
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .iframe-container iframe {
+            display: block;
+            width: 100%;
+            border: none;
+        }
+
+        /* ── CUSTOM DROPDOWN ── */
+
+        .custom-dropdown {
+            position: relative;
+        }
+
+        .custom-dropdown-trigger {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(2, 6, 23, 0.8);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 14px;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: var(--transition);
+        }
+
+        .custom-dropdown-trigger:hover { border-color: var(--accent-blue); }
+        .custom-dropdown-trigger.open { border-color: var(--accent-blue); border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+
+        .custom-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0; right: 0;
+            background: #0f172a;
+            border: 1px solid var(--border-subtle);
+            border-top: none;
+            border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+            max-height: 220px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+
+        .custom-dropdown-menu.open { display: block; }
+
+        .custom-dropdown-search {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .custom-dropdown-search input {
+            width: 100%;
+            padding: 8px 10px;
+            background: rgba(2,6,23,0.8);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 13px;
+            outline: none;
+        }
+
+        .custom-dropdown-option {
+            padding: 10px 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .custom-dropdown-option:hover { background: var(--bg-glass); }
+        .custom-dropdown-option.selected { color: #93c5fd; background: rgba(59,130,246,0.08); }
+
+        /* ── RANGE SLIDER ── */
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--border-subtle);
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            background: var(--grad-primary);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.4);
+        }
+
+        /* ── COLOR PICKER ── */
+
+        input[type="color"] {
+            width: 50px; height: 38px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            background: transparent;
+            cursor: pointer;
+            padding: 2px;
+        }
+
+        /* ── POPUP DEMO BUTTONS ── */
+
+        .popup-demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+        }
+
+        /* ── NESTED FRAME CONTENT ── */
+
+        .frame-inner-content {
+            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            background: #0a1628;
+            min-height: 200px;
+        }
+
+        .frame-inner-content h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #93c5fd;
+        }
+
+        /* ── INDETERMINATE CHECKBOX ── */
+
+        input[type="checkbox"]:indeterminate {
+            accent-color: var(--accent-amber);
+        }
+
+        /* scrollbar for sidebar */
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.15); }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+
+    <!-- ==========================================
+         TOP NAVBAR
+    =========================================== -->
+
+    <nav class="top-nav">
+        <div class="top-nav-left">
+            <a href="/" class="nav-brand">
+                <div class="brand-icon">🤖</div>
+                <div class="brand-name"><span>Automation</span>Lab</div>
+            </a>
+            <div class="nav-module-title" id="activeModuleLabel">Practice Dashboard</div>
+        </div>
+        <div class="top-nav-right">
+            <div class="user-chip" id="userChip">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <span id="userName">User</span>
+            </div>
+            <button class="logout-btn" id="logoutBtn" data-testid="logout-btn">🚪 Logout</button>
+        </div>
+    </nav>
+
+    <!-- ==========================================
+         APP LAYOUT
+    =========================================== -->
+
+    <div class="app-layout">
+
+        <!-- ── SIDEBAR ── -->
+
+        <aside class="sidebar" id="sidebar">
+
+            <div class="sidebar-section-label">Navigation</div>
+
+            <div class="sidebar-item active" data-panel="welcome" data-testid="sidebar-home">
+                <span class="sidebar-icon">🏠</span>
+                Home
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-section-label">Practice Modules</div>
+
+            <div class="sidebar-item" data-panel="popups" data-testid="sidebar-popups">
+                <span class="sidebar-icon">💬</span>
+                Popups &amp; Alerts
+                <span class="sidebar-badge badge-blue badge">6</span>
+            </div>
+
+            <div class="sidebar-item" data-panel="calendar" data-testid="sidebar-calendar">
+                <span class="sidebar-icon">📅</span>
+                Calendar
+                <span class="sidebar-badge badge-green badge">3</span>
+            </div>
+
+            <div class="sidebar-item" data-panel="checkboxes" data-testid="sidebar-checkboxes">
+                <span class="sidebar-icon">☑️</span>
+                Checkboxes
+                <span class="sidebar-badge badge-amber badge">4</span>
+            </div>
+
+            <div class="sidebar-item" data-panel="inputs" data-testid="sidebar-inputs">
+                <span class="sidebar-icon">📝</span>
+                Input &amp; Radio
+                <span class="sidebar-badge badge-violet badge">8</span>
+            </div>
+
+            <div class="sidebar-item" data-panel="dropdown" data-testid="sidebar-dropdown">
+                <span class="sidebar-icon">🔽</span>
+                Dropdowns
+                <span class="sidebar-badge badge-cyan badge">4</span>
+            </div>
+
+            <div class="sidebar-item" data-panel="frames" data-testid="sidebar-frames">
+                <span class="sidebar-icon">🪟</span>
+                Frames
+                <span class="sidebar-badge badge-rose badge">3</span>
+            </div>
+
+            <div class="sidebar-item" data-panel="upload" data-testid="sidebar-upload">
+                <span class="sidebar-icon">📤</span>
+                File Upload
+                <span class="sidebar-badge badge-amber badge">3</span>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-section-label">Info</div>
+
+            <div class="sidebar-item" data-panel="about" data-testid="sidebar-about">
+                <span class="sidebar-icon">ℹ️</span>
+                About
+            </div>
+
+        </aside>
+
+        <!-- ── MAIN CONTENT ── -->
+
+        <main class="main-content" id="mainContent">
+
+
+            <!-- ================================================
+                 WELCOME PANEL
+            ================================================= -->
+
+            <section class="module-panel active" id="panel-welcome">
+                <div class="welcome-hero">
+                    <span class="hero-emoji">🤖</span>
+                    <h1>Welcome to <span>AutomationLab</span></h1>
+                    <p id="welcomeMsg">
+                        Select a module from the sidebar to start practising.
+                        Each module contains real interactive elements designed
+                        for Selenium &amp; Playwright automation testing.
+                    </p>
+                    <div class="welcome-modules-grid">
+
+                        <div class="welcome-module-card" onclick="switchPanel('popups')" data-testid="home-popups">
+                            <span class="wm-icon">💬</span>
+                            <div class="wm-name">Popups &amp; Alerts</div>
+                            <div class="wm-tag">6 scenarios</div>
+                        </div>
+
+                        <div class="welcome-module-card" onclick="switchPanel('calendar')" data-testid="home-calendar">
+                            <span class="wm-icon">📅</span>
+                            <div class="wm-name">Calendar</div>
+                            <div class="wm-tag">3 scenarios</div>
+                        </div>
+
+                        <div class="welcome-module-card" onclick="switchPanel('checkboxes')" data-testid="home-checkboxes">
+                            <span class="wm-icon">☑️</span>
+                            <div class="wm-name">Checkboxes</div>
+                            <div class="wm-tag">4 scenarios</div>
+                        </div>
+
+                        <div class="welcome-module-card" onclick="switchPanel('inputs')" data-testid="home-inputs">
+                            <span class="wm-icon">📝</span>
+                            <div class="wm-name">Input &amp; Radio</div>
+                            <div class="wm-tag">8 scenarios</div>
+                        </div>
+
+                        <div class="welcome-module-card" onclick="switchPanel('dropdown')" data-testid="home-dropdown">
+                            <span class="wm-icon">🔽</span>
+                            <div class="wm-name">Dropdowns</div>
+                            <div class="wm-tag">4 scenarios</div>
+                        </div>
+
+                        <div class="welcome-module-card" onclick="switchPanel('frames')" data-testid="home-frames">
+                            <span class="wm-icon">🪟</span>
+                            <div class="wm-name">Frames</div>
+                            <div class="wm-tag">3 scenarios</div>
+                        </div>
+
+                        <div class="welcome-module-card" onclick="switchPanel('upload')" data-testid="home-upload">
+                            <span class="wm-icon">📤</span>
+                            <div class="wm-name">File Upload</div>
+                            <div class="wm-tag">3 scenarios</div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ================================================
+                 POPUPS & ALERTS PANEL
+            ================================================= -->
+
+            <section class="module-panel" id="panel-popups">
+
+                <div class="module-header">
+                    <div class="module-icon-wrap" style="background:rgba(59,130,246,0.15);">💬</div>
+                    <div class="module-header-text">
+                        <h1>Popups &amp; Alerts</h1>
+                        <p>Practice handling browser-native alerts, confirm &amp; prompt dialogs, and custom JavaScript modal popups. Essential for mastering WebDriver alert switching.</p>
+                    </div>
+                </div>
+
+                <!-- Browser Alerts -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-blue">🔔</span>
+                        <div>
+                            <div class="practice-block-title">Browser Native Alerts</div>
+                            <div class="practice-block-subtitle">Use driver.switchTo().alert() in Selenium</div>
+                        </div>
+                    </div>
+                    <div class="popup-demo-grid">
+                        <button class="btn btn-outline" id="triggerAlert" data-testid="btn-alert">
+                            🔔 Simple Alert
+                        </button>
+                        <button class="btn btn-outline" id="triggerConfirm" data-testid="btn-confirm">
+                            ✅ Confirm Dialog
+                        </button>
+                        <button class="btn btn-outline" id="triggerPrompt" data-testid="btn-prompt">
+                            📝 Prompt Dialog
+                        </button>
+                    </div>
+                    <div class="result-box" id="alertResult"></div>
+                </div>
+
+                <!-- Custom Modals -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-violet">🪟</span>
+                        <div>
+                            <div class="practice-block-title">Custom Modal Dialogs</div>
+                            <div class="practice-block-subtitle">Practice waiting for modals to appear and interacting with them</div>
+                        </div>
+                    </div>
+                    <div class="popup-demo-grid">
+                        <button class="btn btn-outline" id="openSuccessModal" data-testid="btn-success-modal">
+                            ✅ Success Modal
+                        </button>
+                        <button class="btn btn-outline" id="openErrorModal" data-testid="btn-error-modal">
+                            ❌ Error Modal
+                        </button>
+                        <button class="btn btn-outline" id="openTimedModal" data-testid="btn-timed-modal">
+                            ⏱ Timed Popup (3s)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Nested Popup -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-amber">🔗</span>
+                        <div>
+                            <div class="practice-block-title">Nested &amp; Chained Popups</div>
+                            <div class="practice-block-subtitle">Handle popups that open other popups</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline" id="openNestedModal" data-testid="btn-nested-modal">
+                        🔗 Open Nested Popup
+                    </button>
+                </div>
+
+            </section>
+
+
+            <!-- ================================================
+                 CALENDAR PANEL
+            ================================================= -->
+
+            <section class="module-panel" id="panel-calendar">
+
+                <div class="module-header">
+                    <div class="module-icon-wrap" style="background:rgba(16,185,129,0.15);">📅</div>
+                    <div class="module-header-text">
+                        <h1>Calendar &amp; Date Picker</h1>
+                        <p>Practice navigating date pickers, selecting dates, date ranges, and handling min/max date constraints. Common in booking, e-commerce and scheduling apps.</p>
+                    </div>
+                </div>
+
+                <!-- Simple Date Picker -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-green">📅</span>
+                        <div>
+                            <div class="practice-block-title">HTML Date Input</div>
+                            <div class="practice-block-subtitle">Use sendKeys() or JS to set date values</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:20px; flex-wrap:wrap; align-items:flex-end;">
+                        <div class="form-group" style="margin:0; flex:1; min-width:200px;">
+                            <label class="form-label" for="dateInput">Select a Date</label>
+                            <input type="date" id="dateInput" name="date" class="form-control"
+                                   data-testid="date-input"
+                                   min="2020-01-01" max="2030-12-31">
+                        </div>
+                        <div class="form-group" style="margin:0; flex:1; min-width:200px;">
+                            <label class="form-label" for="dateTimeInput">Date &amp; Time</label>
+                            <input type="datetime-local" id="dateTimeInput" name="datetime" class="form-control"
+                                   data-testid="datetime-input">
+                        </div>
+                        <button class="btn btn-success" id="submitDate" data-testid="submit-date">
+                            ✔ Submit Date
+                        </button>
+                    </div>
+                    <div class="result-box" id="dateResult"></div>
+                </div>
+
+                <!-- Custom Calendar -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-cyan">🗓</span>
+                        <div>
+                            <div class="practice-block-title">Custom JS Calendar</div>
+                            <div class="practice-block-subtitle">Navigate months, click specific dates, verify selected state</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:30px; flex-wrap:wrap;">
+                        <div>
+                            <div class="calendar-wrap" id="calendarWrap" data-testid="custom-calendar">
+                                <div class="cal-nav">
+                                    <button id="calPrev" data-testid="cal-prev" aria-label="Previous month">&#8249;</button>
+                                    <div class="cal-month-year" id="calMonthYear" data-testid="cal-month-year">--</div>
+                                    <button id="calNext" data-testid="cal-next" aria-label="Next month">&#8250;</button>
+                                </div>
+                                <div class="cal-grid" id="calGrid" data-testid="cal-grid"></div>
+                            </div>
+                        </div>
+                        <div style="flex:1; min-width:200px;">
+                            <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">
+                                Selected Date: <strong id="calSelectedDate" data-testid="cal-selected-date" style="color:var(--text-primary);">None</strong>
+                            </p>
+                            <button class="btn btn-outline" id="clearCalDate" data-testid="cal-clear">Clear Selection</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Date Range -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-violet">📆</span>
+                        <div>
+                            <div class="practice-block-title">Date Range Picker</div>
+                            <div class="practice-block-subtitle">Select check-in and check-out dates</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:16px; flex-wrap:wrap; align-items:flex-end;">
+                        <div class="form-group" style="margin:0; flex:1; min-width:180px;">
+                            <label class="form-label" for="checkIn">Check-in Date</label>
+                            <input type="date" id="checkIn" name="checkIn" class="form-control" data-testid="checkin-date">
+                        </div>
+                        <div class="form-group" style="margin:0; flex:1; min-width:180px;">
+                            <label class="form-label" for="checkOut">Check-out Date</label>
+                            <input type="date" id="checkOut" name="checkOut" class="form-control" data-testid="checkout-date">
+                        </div>
+                        <button class="btn btn-success" id="submitDateRange" data-testid="submit-date-range">Search</button>
+                    </div>
+                    <div class="result-box" id="dateRangeResult"></div>
+                </div>
+
+            </section>
+
+
+            <!-- ================================================
+                 CHECKBOXES PANEL
+            ================================================= -->
+
+            <section class="module-panel" id="panel-checkboxes">
+
+                <div class="module-header">
+                    <div class="module-icon-wrap" style="background:rgba(245,158,11,0.15);">☑️</div>
+                    <div class="module-header-text">
+                        <h1>Checkboxes</h1>
+                        <p>Practice checking, unchecking, verifying checkbox states, and handling group selections with select-all. Covers indeterminate state too.</p>
+                    </div>
+                </div>
+
+                <!-- Individual Checkboxes -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-amber">☑️</span>
+                        <div>
+                            <div class="practice-block-title">Individual Checkboxes</div>
+                            <div class="practice-block-subtitle">Use element.click() or element.isSelected()</div>
+                        </div>
+                    </div>
+                    <div class="custom-check-group">
+                        <label class="custom-check" data-testid="chk-python">
+                            <input type="checkbox" id="chkPython" name="language" value="Python" data-testid="input-chk-python">
+                            <span>🐍 Python</span>
+                        </label>
+                        <label class="custom-check" data-testid="chk-java">
+                            <input type="checkbox" id="chkJava" name="language" value="Java" data-testid="input-chk-java" checked>
+                            <span>☕ Java</span>
+                        </label>
+                        <label class="custom-check" data-testid="chk-js">
+                            <input type="checkbox" id="chkJS" name="language" value="JavaScript" data-testid="input-chk-js">
+                            <span>🟨 JavaScript</span>
+                        </label>
+                        <label class="custom-check" data-testid="chk-csharp">
+                            <input type="checkbox" id="chkCSharp" name="language" value="C#" data-testid="input-chk-csharp">
+                            <span>🔷 C#</span>
+                        </label>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top:16px;" id="getCheckedLangs" data-testid="btn-get-checked">Get Selected</button>
+                    <div class="result-box" id="checkResult"></div>
+                </div>
+
+                <!-- Select All -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-green">📋</span>
+                        <div>
+                            <div class="practice-block-title">Select All / Deselect All</div>
+                            <div class="practice-block-subtitle">Indeterminate state when partially selected</div>
+                        </div>
+                    </div>
+                    <div class="custom-check-group">
+                        <label class="custom-check" data-testid="chk-select-all" style="border-color: rgba(59,130,246,0.3); background:rgba(59,130,246,0.05);">
+                            <input type="checkbox" id="selectAll" data-testid="input-select-all">
+                            <span style="font-weight:600; color:var(--text-primary);">Select All Skills</span>
+                        </label>
+                        <label class="custom-check" data-testid="chk-selenium">
+                            <input type="checkbox" id="skillSelenium" class="skill-chk" value="Selenium" data-testid="input-chk-selenium">
+                            <span>Selenium WebDriver</span>
+                        </label>
+                        <label class="custom-check" data-testid="chk-playwright">
+                            <input type="checkbox" id="skillPlaywright" class="skill-chk" value="Playwright" data-testid="input-chk-playwright">
+                            <span>Playwright</span>
+                        </label>
+                        <label class="custom-check" data-testid="chk-cypress">
+                            <input type="checkbox" id="skillCypress" class="skill-chk" value="Cypress" data-testid="input-chk-cypress">
+                            <span>Cypress</span>
+                        </label>
+                        <label class="custom-check" data-testid="chk-appium">
+                            <input type="checkbox" id="skillAppium" class="skill-chk" value="Appium" data-testid="input-chk-appium">
+                            <span>Appium</span>
+                        </label>
+                    </div>
+                    <div id="skillsResult" style="margin-top:12px; font-size:13px; color:var(--text-secondary);">
+                        Selected: <strong id="skillsSelectedText" data-testid="skills-selected">None</strong>
+                    </div>
+                </div>
+
+            </section>
+
+
+            <!-- ================================================
+                 INPUTS & RADIO PANEL
+            ================================================= -->
+
+            <section class="module-panel" id="panel-inputs">
+
+                <div class="module-header">
+                    <div class="module-icon-wrap" style="background:rgba(124,58,237,0.15);">📝</div>
+                    <div class="module-header-text">
+                        <h1>Input Fields &amp; Radio Buttons</h1>
+                        <p>Practice interacting with all HTML input types and radio button groups. Use sendKeys(), clear(), getAttribute() and form submission flows.</p>
+                    </div>
+                </div>
+
+                <!-- Text Inputs -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-violet">📄</span>
+                        <div>
+                            <div class="practice-block-title">Text Input Types</div>
+                            <div class="practice-block-subtitle">All standard HTML input types in one form</div>
+                        </div>
+                    </div>
+                    <form id="inputsForm" novalidate>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label class="form-label" for="inpText">Text</label>
+                                <input type="text" id="inpText" name="text" class="form-control"
+                                       placeholder="Type anything…" data-testid="inp-text">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="inpNumber">Number</label>
+                                <input type="number" id="inpNumber" name="number" class="form-control"
+                                       placeholder="Enter a number" min="0" max="999" data-testid="inp-number">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="inpEmail">Email</label>
+                                <input type="email" id="inpEmail" name="email" class="form-control"
+                                       placeholder="user@example.com" data-testid="inp-email">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="inpPassword">Password</label>
+                                <input type="password" id="inpPassword" name="password" class="form-control"
+                                       placeholder="Enter password" data-testid="inp-password">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="inpUrl">URL</label>
+                                <input type="url" id="inpUrl" name="url" class="form-control"
+                                       placeholder="https://example.com" data-testid="inp-url">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="inpPhone">Phone</label>
+                                <input type="tel" id="inpPhone" name="phone" class="form-control"
+                                       placeholder="+91 98765 43210" data-testid="inp-phone">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="inpTextarea">Textarea</label>
+                            <textarea id="inpTextarea" name="textarea" class="form-control"
+                                      placeholder="Enter multiline text here…" rows="3"
+                                      data-testid="inp-textarea"
+                                      style="resize:vertical;"></textarea>
+                        </div>
+
+                        <div style="display:flex; gap:16px; flex-wrap:wrap; align-items:flex-end;" class="mb-4">
+                            <div class="form-group" style="margin:0; flex:1; min-width:140px;">
+                                <label class="form-label" for="inpColor">Color Picker</label>
+                                <input type="color" id="inpColor" name="color" value="#3b82f6"
+                                       data-testid="inp-color">
+                            </div>
+                            <div class="form-group" style="margin:0; flex:1; min-width:200px;">
+                                <label class="form-label" for="inpRange">
+                                    Range Slider: <strong id="rangeVal" data-testid="range-display">50</strong>
+                                </label>
+                                <input type="range" id="inpRange" name="range" min="0" max="100" value="50"
+                                       data-testid="inp-range">
+                            </div>
+                            <div class="form-group" style="margin:0; flex:1; min-width:180px;">
+                                <label class="form-label" for="inpSearch">Search Input</label>
+                                <input type="search" id="inpSearch" name="search" class="form-control"
+                                       placeholder="Search…" data-testid="inp-search">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="inpReadonly">Read-only Field</label>
+                            <input type="text" id="inpReadonly" class="form-control"
+                                   value="This field is read-only — you cannot type here"
+                                   readonly data-testid="inp-readonly">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="inpDisabled">Disabled Field</label>
+                            <input type="text" id="inpDisabled" class="form-control"
+                                   value="Disabled input"
+                                   disabled data-testid="inp-disabled"
+                                   style="opacity:0.5; cursor:not-allowed;">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" data-testid="btn-submit-inputs">
+                            ✔ Submit Form
+                        </button>
+                    </form>
+                    <div class="result-box" id="inputsResult"></div>
+                </div>
+
+                <!-- Radio Buttons -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-cyan">🔘</span>
+                        <div>
+                            <div class="practice-block-title">Radio Button Groups</div>
+                            <div class="practice-block-subtitle">Use element.click() and check isSelected() for radio buttons</div>
+                        </div>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; flex-wrap:wrap;">
+                        <div>
+                            <p class="form-label" style="margin-bottom:12px;">Preferred Browser</p>
+                            <div class="custom-check-group">
+                                <label class="custom-check" data-testid="radio-chrome">
+                                    <input type="radio" name="browser" id="radioChrome" value="Chrome" data-testid="input-radio-chrome">
+                                    <span>🟡 Chrome</span>
+                                </label>
+                                <label class="custom-check" data-testid="radio-firefox">
+                                    <input type="radio" name="browser" id="radioFirefox" value="Firefox" data-testid="input-radio-firefox">
+                                    <span>🦊 Firefox</span>
+                                </label>
+                                <label class="custom-check" data-testid="radio-edge">
+                                    <input type="radio" name="browser" id="radioEdge" value="Edge" data-testid="input-radio-edge">
+                                    <span>🔵 Edge</span>
+                                </label>
+                                <label class="custom-check" data-testid="radio-safari">
+                                    <input type="radio" name="browser" id="radioSafari" value="Safari" data-testid="input-radio-safari">
+                                    <span>🍎 Safari</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p class="form-label" style="margin-bottom:12px;">Experience Level</p>
+                            <div class="custom-check-group">
+                                <label class="custom-check" data-testid="radio-beginner">
+                                    <input type="radio" name="level" id="radioBeginner" value="Beginner" data-testid="input-radio-beginner">
+                                    <span>🌱 Beginner</span>
+                                </label>
+                                <label class="custom-check" data-testid="radio-intermediate">
+                                    <input type="radio" name="level" id="radioIntermediate" value="Intermediate" data-testid="input-radio-intermediate" checked>
+                                    <span>⚡ Intermediate</span>
+                                </label>
+                                <label class="custom-check" data-testid="radio-advanced">
+                                    <input type="radio" name="level" id="radioAdvanced" value="Advanced" data-testid="input-radio-advanced">
+                                    <span>🚀 Advanced</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" style="margin-top:20px;" id="getRadioValues" data-testid="btn-get-radio">
+                        Get Selected Values
+                    </button>
+                    <div class="result-box" id="radioResult"></div>
+                </div>
+
+            </section>
+
+
+            <!-- ================================================
+                 DROPDOWN PANEL
+            ================================================= -->
+
+            <section class="module-panel" id="panel-dropdown">
+
+                <div class="module-header">
+                    <div class="module-icon-wrap" style="background:rgba(6,182,212,0.15);">🔽</div>
+                    <div class="module-header-text">
+                        <h1>Dropdowns</h1>
+                        <p>Practice with standard HTML select, multi-select, and custom JavaScript dropdown menus. Essential for using Selenium's Select class and custom element XPaths.</p>
+                    </div>
+                </div>
+
+                <!-- Standard Select -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-cyan">📋</span>
+                        <div>
+                            <div class="practice-block-title">Standard HTML Select</div>
+                            <div class="practice-block-subtitle">Use Selenium's Select class: new Select(element).selectByVisibleText()</div>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="selCountry">Select Country</label>
+                            <select id="selCountry" name="country" class="form-control" data-testid="sel-country">
+                                <option value="">-- Select Country --</option>
+                                <option value="IN">🇮🇳 India</option>
+                                <option value="US">🇺🇸 United States</option>
+                                <option value="UK">🇬🇧 United Kingdom</option>
+                                <option value="AU">🇦🇺 Australia</option>
+                                <option value="CA">🇨🇦 Canada</option>
+                                <option value="SG">🇸🇬 Singapore</option>
+                                <option value="DE">🇩🇪 Germany</option>
+                                <option value="JP">🇯🇵 Japan</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="selRole">Select Role</label>
+                            <select id="selRole" name="role" class="form-control" data-testid="sel-role">
+                                <option value="">-- Select Role --</option>
+                                <option value="sde">Software Developer</option>
+                                <option value="qa">QA Automation Engineer</option>
+                                <option value="sdet">SDET</option>
+                                <option value="devops">DevOps Engineer</option>
+                                <option value="ba">Business Analyst</option>
+                                <option value="pm">Product Manager</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="getSelectValues" data-testid="btn-get-select">Get Selected Values</button>
+                    <div class="result-box" id="selectResult"></div>
+                </div>
+
+                <!-- Multi-Select -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-blue">🗂</span>
+                        <div>
+                            <div class="practice-block-title">Multi-Select Dropdown</div>
+                            <div class="practice-block-subtitle">Hold Ctrl/Cmd to select multiple. Use Select.getFirstSelectedOption() &amp; getAllSelectedOptions()</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="multiSelect">Select Frameworks (hold Ctrl to multi-select)</label>
+                        <select id="multiSelect" name="frameworks" class="form-control" multiple
+                                size="6" data-testid="multi-select">
+                            <option value="selenium">Selenium WebDriver</option>
+                            <option value="playwright">Playwright</option>
+                            <option value="cypress">Cypress</option>
+                            <option value="appium">Appium</option>
+                            <option value="robot">Robot Framework</option>
+                            <option value="junit">JUnit 5</option>
+                            <option value="testng">TestNG</option>
+                            <option value="pytest">pytest</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="getMultiSelect" data-testid="btn-get-multi-select">Get All Selected</button>
+                    <div class="result-box" id="multiSelectResult"></div>
+                </div>
+
+                <!-- Custom Dropdown -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-violet">🎨</span>
+                        <div>
+                            <div class="practice-block-title">Custom JS Dropdown (Searchable)</div>
+                            <div class="practice-block-subtitle">Practice clicking trigger → searching → selecting option using XPath/CSS selectors</div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="max-width:400px;">
+                        <label class="form-label">Choose a Programming Language</label>
+                        <div class="custom-dropdown" id="customDropdown" data-testid="custom-dropdown">
+                            <button class="custom-dropdown-trigger" id="customDropdownTrigger"
+                                    data-testid="custom-dropdown-trigger" aria-haspopup="listbox" aria-expanded="false">
+                                <span id="customDropdownSelected">Select a language…</span>
+                                <span>▾</span>
+                            </button>
+                            <div class="custom-dropdown-menu" id="customDropdownMenu" role="listbox">
+                                <div class="custom-dropdown-search">
+                                    <input type="text" id="customDropdownSearch" placeholder="Search languages…"
+                                           data-testid="custom-dropdown-search" aria-label="Search languages">
+                                </div>
+                                <div id="customDropdownOptions">
+                                    <div class="custom-dropdown-option" data-value="python" role="option" data-testid="opt-python">🐍 Python</div>
+                                    <div class="custom-dropdown-option" data-value="java" role="option" data-testid="opt-java">☕ Java</div>
+                                    <div class="custom-dropdown-option" data-value="javascript" role="option" data-testid="opt-javascript">🟨 JavaScript</div>
+                                    <div class="custom-dropdown-option" data-value="typescript" role="option" data-testid="opt-typescript">🔷 TypeScript</div>
+                                    <div class="custom-dropdown-option" data-value="csharp" role="option" data-testid="opt-csharp">💜 C#</div>
+                                    <div class="custom-dropdown-option" data-value="ruby" role="option" data-testid="opt-ruby">💎 Ruby</div>
+                                    <div class="custom-dropdown-option" data-value="go" role="option" data-testid="opt-go">🐹 Go</div>
+                                    <div class="custom-dropdown-option" data-value="rust" role="option" data-testid="opt-rust">🦀 Rust</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="font-size:13px; color:var(--text-secondary); margin-top:8px;">
+                        Selected value: <strong id="customDropdownValue" data-testid="custom-dropdown-value">None</strong>
+                    </div>
+                </div>
+
+                <!-- Dependent Dropdown -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-rose">⛓</span>
+                        <div>
+                            <div class="practice-block-title">Dependent / Chained Dropdowns</div>
+                            <div class="practice-block-subtitle">State updates when parent changes — wait for options to load</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:16px; flex-wrap:wrap; align-items:flex-end;">
+                        <div class="form-group" style="margin:0; flex:1; min-width:180px;">
+                            <label class="form-label" for="depCountry">Country</label>
+                            <select id="depCountry" class="form-control" data-testid="dep-country">
+                                <option value="">Select Country</option>
+                                <option value="IN">India</option>
+                                <option value="US">United States</option>
+                                <option value="AU">Australia</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin:0; flex:1; min-width:180px;">
+                            <label class="form-label" for="depState">State</label>
+                            <select id="depState" class="form-control" data-testid="dep-state" disabled>
+                                <option value="">Select Country first</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin:0; flex:1; min-width:180px;">
+                            <label class="form-label" for="depCity">City</label>
+                            <select id="depCity" class="form-control" data-testid="dep-city" disabled>
+                                <option value="">Select State first</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="result-box" id="depDropdownResult" style="margin-top:16px;"></div>
+                </div>
+
+            </section>
+
+
+            <!-- ================================================
+                 FRAMES PANEL
+            ================================================= -->
+
+            <section class="module-panel" id="panel-frames">
+
+                <div class="module-header">
+                    <div class="module-icon-wrap" style="background:rgba(244,63,94,0.15);">🪟</div>
+                    <div class="module-header-text">
+                        <h1>Frames &amp; iFrames</h1>
+                        <p>Practice switching into and out of iframes. Use driver.switchTo().frame() in Selenium or frameLocator() in Playwright. Includes nested frame scenarios.</p>
+                    </div>
+                </div>
+
+                <!-- Single Frame -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-rose">🪟</span>
+                        <div>
+                            <div class="practice-block-title">Single iFrame</div>
+                            <div class="practice-block-subtitle">Switch to frame by ID, name, or index. Remember to switch back!</div>
+                        </div>
+                    </div>
+                    <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">
+                        Selectors: <code class="code-chip">id="single-frame"</code> &nbsp; <code class="code-chip">name="singleFrame"</code>
+                    </p>
+                    <div class="iframe-container">
+                        <iframe
+                            id="single-frame"
+                            name="singleFrame"
+                            data-testid="single-frame"
+                            title="Single iframe practice"
+                            height="220"
+                            srcdoc="
+                                <style>
+                                    body { margin:0; background:#0a1628; font-family:Inter,sans-serif; color:#f1f5f9; padding:24px; }
+                                    h3 { color:#93c5fd; margin-bottom:10px; }
+                                    p  { color:#94a3b8; font-size:14px; line-height:1.6; }
+                                    input { width:100%; padding:10px 14px; background:#020617; border:1px solid #334155; border-radius:8px; color:#f1f5f9; font-size:14px; margin-top:10px; outline:none; box-sizing:border-box; }
+                                    input:focus { border-color:#3b82f6; }
+                                    .chip { display:inline-block; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.3); border-radius:4px; padding:2px 8px; font-family:monospace; font-size:12px; color:#93c5fd; margin-top:6px; }
+                                </style>
+                                <h3>📍 You are inside a Single iFrame</h3>
+                                <p>This content lives inside an iframe. Use driver.switchTo().frame('singleFrame') to access it.</p>
+                                <input type='text' id='frame-input' name='frameInput' data-testid='frame-input' placeholder='Type something inside the frame…'>
+                                <div class='chip'>iframe id=single-frame</div>
+                            "
+                        ></iframe>
+                    </div>
+                </div>
+
+                <!-- Nested Frames -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-amber">🔗</span>
+                        <div>
+                            <div class="practice-block-title">Nested iFrames</div>
+                            <div class="practice-block-subtitle">Switch to outer frame first, then switch to inner frame. Use switchTo().defaultContent() to exit.</div>
+                        </div>
+                    </div>
+                    <div class="iframe-container">
+                        <iframe
+                            id="outer-frame"
+                            name="outerFrame"
+                            data-testid="outer-frame"
+                            title="Outer nested iframe"
+                            height="280"
+                            srcdoc="
+                                <style>
+                                    body { margin:0; background:#071020; font-family:Inter,sans-serif; color:#f1f5f9; padding:20px; }
+                                    h3  { color:#6ee7b7; margin-bottom:8px; font-size:15px; }
+                                    p   { color:#94a3b8; font-size:13px; line-height:1.6; margin-bottom:12px; }
+                                    .iframe-container { border:2px solid rgba(110,231,183,0.3); border-radius:8px; overflow:hidden; }
+                                    iframe { display:block; width:100%; border:none; }
+                                    .chip { display:inline-block; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); border-radius:4px; padding:2px 8px; font-family:monospace; font-size:11px; color:#6ee7b7; }
+                                </style>
+                                <h3>🟢 Outer Frame — <span class='chip'>id=outer-frame</span></h3>
+                                <p>First switch to this frame, then switch to the inner frame below.</p>
+                                <div class='iframe-container'>
+                                    <iframe
+                                        id='inner-frame'
+                                        name='innerFrame'
+                                        data-testid='inner-frame'
+                                        height='130'
+                                        srcdoc=\"
+                                            <style>
+                                                body { margin:0; background:#020617; font-family:Inter,sans-serif; color:#f1f5f9; padding:16px; }
+                                                h4 { color:#c4b5fd; margin-bottom:8px; font-size:14px; }
+                                                p  { color:#94a3b8; font-size:12px; }
+                                                button { padding:8px 16px; background:linear-gradient(135deg,#3b82f6,#7c3aed); border:none; border-radius:6px; color:white; font-size:13px; cursor:pointer; margin-top:8px; }
+                                            </style>
+                                            <h4>🟣 Inner Frame — id=inner-frame</h4>
+                                            <p>switchTo().frame('outerFrame') → switchTo().frame('innerFrame')</p>
+                                            <button id='innerFrameBtn' data-testid='inner-frame-btn' onclick=\\\"this.textContent='✅ Clicked!'\\\">Click Me Inside!</button>
+                                        \"
+                                    ></iframe>
+                                </div>
+                            "
+                        ></iframe>
+                    </div>
+                </div>
+
+                <!-- Dynamic Frame -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-blue">⚡</span>
+                        <div>
+                            <div class="practice-block-title">Dynamically Loaded iFrame</div>
+                            <div class="practice-block-subtitle">Frame loads after a 2-second delay — practice explicit waits</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline" id="loadDynamicFrame" data-testid="btn-load-dynamic-frame">
+                        ⚡ Load Dynamic iFrame
+                    </button>
+                    <div id="dynamicFrameContainer" style="margin-top:16px;"></div>
+                </div>
+
+            </section>
+
+
+            <!-- ================================================
+                 FILE UPLOAD PANEL
+            ================================================= -->
+
+            <section class="module-panel" id="panel-upload">
+
+                <div class="module-header">
+                    <div class="module-icon-wrap" style="background:rgba(249,115,22,0.15);">📤</div>
+                    <div class="module-header-text">
+                        <h1>File Upload</h1>
+                        <p>Practice file upload interactions — single file, multiple files, and drag-and-drop zones. Use sendKeys() for file path in Selenium.</p>
+                    </div>
+                </div>
+
+                <!-- Single File Upload -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-amber">📁</span>
+                        <div>
+                            <div class="practice-block-title">Single File Upload</div>
+                            <div class="practice-block-subtitle">element.sendKeys("/path/to/file") — works with hidden input too</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="singleFileInput">Upload a File</label>
+                        <input type="file" id="singleFileInput" name="file" class="form-control"
+                               accept=".jpg,.jpeg,.png,.pdf,.txt,.docx"
+                               data-testid="single-file-input"
+                               style="padding:10px;">
+                    </div>
+                    <button class="btn btn-success" id="uploadSingleFile" data-testid="btn-upload-single">
+                        📤 Upload File
+                    </button>
+                    <div class="result-box" id="singleUploadResult"></div>
+                </div>
+
+                <!-- Multiple File Upload -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-blue">📦</span>
+                        <div>
+                            <div class="practice-block-title">Multiple File Upload</div>
+                            <div class="practice-block-subtitle">Accepts up to 5 files. Use multiple attribute — max 5MB each</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="multiFileInput">Select Multiple Files</label>
+                        <input type="file" id="multiFileInput" name="files" class="form-control"
+                               multiple
+                               data-testid="multi-file-input"
+                               style="padding:10px;">
+                    </div>
+                    <div id="multiFilePreview" class="file-list"></div>
+                    <button class="btn btn-success" style="margin-top:12px;" id="uploadMultipleFiles" data-testid="btn-upload-multiple">
+                        📦 Upload All Files
+                    </button>
+                    <div class="result-box" id="multiUploadResult"></div>
+                </div>
+
+                <!-- Drag & Drop -->
+                <div class="practice-block">
+                    <div class="practice-block-header">
+                        <span class="badge badge-violet">🖱</span>
+                        <div>
+                            <div class="practice-block-title">Drag &amp; Drop Upload Zone</div>
+                            <div class="practice-block-subtitle">Practice with JS drag events. Check dropzone active state changes.</div>
+                        </div>
+                    </div>
+                    <div class="dropzone" id="dropzone" data-testid="dropzone">
+                        <span class="dz-icon">☁️</span>
+                        <div class="dz-title">Drag &amp; Drop Files Here</div>
+                        <div class="dz-sub">or click to browse — PNG, JPG, PDF, TXT up to 5MB</div>
+                        <input type="file" id="dropzoneInput" data-testid="dropzone-input"
+                               style="display:none;" multiple>
+                    </div>
+                    <div class="file-list" id="dropzoneFiles"></div>
+                    <div class="result-box" id="dropzoneResult"></div>
+                </div>
+
+            </section>
+
+
+            <!-- ================================================
+                 ABOUT PANEL
+            ================================================= -->
+
+            <section class="module-panel" id="panel-about">
+
+                <div class="module-header">
+                    <div class="module-icon-wrap" style="background:rgba(59,130,246,0.15);">ℹ️</div>
+                    <div class="module-header-text">
+                        <h1>About AutomationLab</h1>
+                        <p>Information about this platform, test credentials, and API endpoints for automation practice.</p>
+                    </div>
+                </div>
+
+                <div class="practice-block">
+                    <div class="practice-block-title" style="margin-bottom:16px;">🔑 Test Credentials</div>
+                    <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                        <thead>
+                            <tr style="border-bottom:1px solid var(--border-subtle);">
+                                <th style="text-align:left; padding:8px 12px; color:var(--text-muted); font-size:11px; letter-spacing:1px; text-transform:uppercase;">Username</th>
+                                <th style="text-align:left; padding:8px 12px; color:var(--text-muted); font-size:11px; letter-spacing:1px; text-transform:uppercase;">Password</th>
+                                <th style="text-align:left; padding:8px 12px; color:var(--text-muted); font-size:11px; letter-spacing:1px; text-transform:uppercase;">Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom:1px solid var(--border-subtle);">
+                                <td style="padding:10px 12px;"><code class="code-chip">testuser</code></td>
+                                <td style="padding:10px 12px;"><code class="code-chip">Test@1234</code></td>
+                                <td style="padding:10px 12px; color:var(--text-secondary);">Test User</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid var(--border-subtle);">
+                                <td style="padding:10px 12px;"><code class="code-chip">admin</code></td>
+                                <td style="padding:10px 12px;"><code class="code-chip">Admin@123</code></td>
+                                <td style="padding:10px 12px; color:var(--text-secondary);">Admin User</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:10px 12px;"><code class="code-chip">practice</code></td>
+                                <td style="padding:10px 12px;"><code class="code-chip">Practice@99</code></td>
+                                <td style="padding:10px 12px; color:var(--text-secondary);">Practice User</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="practice-block">
+                    <div class="practice-block-title" style="margin-bottom:16px;">🔌 API Endpoints</div>
+                    <div style="display:flex; flex-direction:column; gap:10px; font-size:13px;">
+                        <div style="display:flex; gap:12px; align-items:center; padding:10px 14px; background:rgba(2,6,23,0.7); border-radius:8px;">
+                            <span class="badge badge-green" style="width:50px; justify-content:center; flex-shrink:0;">POST</span>
+                            <code class="code-chip">/api/login</code>
+                            <span style="color:var(--text-muted);">Login with username &amp; password</span>
+                        </div>
+                        <div style="display:flex; gap:12px; align-items:center; padding:10px 14px; background:rgba(2,6,23,0.7); border-radius:8px;">
+                            <span class="badge badge-green" style="width:50px; justify-content:center; flex-shrink:0;">POST</span>
+                            <code class="code-chip">/api/signup</code>
+                            <span style="color:var(--text-muted);">Create new account</span>
+                        </div>
+                        <div style="display:flex; gap:12px; align-items:center; padding:10px 14px; background:rgba(2,6,23,0.7); border-radius:8px;">
+                            <span class="badge badge-blue" style="width:50px; justify-content:center; flex-shrink:0;">GET</span>
+                            <code class="code-chip">/api/me</code>
+                            <span style="color:var(--text-muted);">Get current logged-in user</span>
+                        </div>
+                        <div style="display:flex; gap:12px; align-items:center; padding:10px 14px; background:rgba(2,6,23,0.7); border-radius:8px;">
+                            <span class="badge badge-green" style="width:50px; justify-content:center; flex-shrink:0;">POST</span>
+                            <code class="code-chip">/api/upload</code>
+                            <span style="color:var(--text-muted);">Upload a file (multipart/form-data)</span>
+                        </div>
+                        <div style="display:flex; gap:12px; align-items:center; padding:10px 14px; background:rgba(2,6,23,0.7); border-radius:8px;">
+                            <span class="badge badge-green" style="width:50px; justify-content:center; flex-shrink:0;">POST</span>
+                            <code class="code-chip">/api/submit-form</code>
+                            <span style="color:var(--text-muted);">Submit form data</span>
+                        </div>
+                        <div style="display:flex; gap:12px; align-items:center; padding:10px 14px; background:rgba(2,6,23,0.7); border-radius:8px;">
+                            <span class="badge badge-green" style="width:50px; justify-content:center; flex-shrink:0;">POST</span>
+                            <code class="code-chip">/api/logout</code>
+                            <span style="color:var(--text-muted);">Destroy session and log out</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="practice-block">
+                    <div class="practice-block-title" style="margin-bottom:12px;">🛠 Tech Stack</div>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <span class="badge badge-green">Node.js v24</span>
+                        <span class="badge badge-blue">Express.js</span>
+                        <span class="badge badge-violet">express-session</span>
+                        <span class="badge badge-amber">Multer</span>
+                        <span class="badge badge-cyan">HTML5</span>
+                        <span class="badge badge-rose">Vanilla CSS</span>
+                        <span class="badge badge-blue">Vanilla JS</span>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- ==========================================
+         POPUP MODALS
+    =========================================== -->
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="successModal" data-testid="success-modal">
+        <div class="modal-box">
+            <button class="modal-close" id="closeSuccessModal" data-testid="close-success-modal" aria-label="Close">✕</button>
+            <div style="text-align:center; padding:10px 0;">
+                <div style="width:60px; height:60px; background:var(--grad-success); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 18px;">✅</div>
+                <h2 style="margin-bottom:8px;" data-testid="success-modal-title">Operation Successful!</h2>
+                <p style="color:var(--text-secondary); font-size:14px; margin-bottom:24px;" data-testid="success-modal-message">Your action was completed successfully. This is a custom success modal.</p>
+                <button class="btn btn-success btn-full" id="confirmSuccess" data-testid="confirm-success">Great, continue!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div class="modal-overlay" id="errorModal" data-testid="error-modal">
+        <div class="modal-box">
+            <button class="modal-close" id="closeErrorModal" data-testid="close-error-modal" aria-label="Close">✕</button>
+            <div style="text-align:center; padding:10px 0;">
+                <div style="width:60px; height:60px; background:var(--grad-danger); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 18px;">❌</div>
+                <h2 style="margin-bottom:8px;" data-testid="error-modal-title">Something Went Wrong!</h2>
+                <p style="color:var(--text-secondary); font-size:14px; margin-bottom:24px;" data-testid="error-modal-message">This is a custom error modal dialog. Practice handling error states in your automation scripts.</p>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-outline btn-full" id="dismissError" data-testid="dismiss-error">Dismiss</button>
+                    <button class="btn btn-danger btn-full" id="retryError" data-testid="retry-error">Retry</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Timed Modal -->
+    <div class="modal-overlay" id="timedModal" data-testid="timed-modal">
+        <div class="modal-box">
+            <button class="modal-close" id="closeTimedModal" data-testid="close-timed-modal" aria-label="Close">✕</button>
+            <div style="text-align:center; padding:10px 0;">
+                <div style="width:60px; height:60px; background:var(--grad-amber); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 18px;">⏱</div>
+                <h2 style="margin-bottom:8px;" data-testid="timed-modal-title">Timed Popup!</h2>
+                <p style="color:var(--text-secondary); font-size:14px; margin-bottom:12px;">This popup appeared after a 3 second delay. Practice using explicit waits: <code class="code-chip">WebDriverWait</code></p>
+                <p style="font-size:13px; color:var(--accent-amber);">Auto-closes in <strong id="timedModalCountdown" data-testid="timed-countdown">5</strong>s</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nested Modal (Step 1) -->
+    <div class="modal-overlay" id="nestedModal1" data-testid="nested-modal-1">
+        <div class="modal-box">
+            <button class="modal-close" id="closeNestedModal1" data-testid="close-nested-1" aria-label="Close">✕</button>
+            <h2 style="margin-bottom:10px;" data-testid="nested-modal-1-title">Step 1 of 2</h2>
+            <p style="color:var(--text-secondary); font-size:14px; margin-bottom:20px;">This is the first popup. Click Next to open a nested popup on top of this one.</p>
+            <button class="btn btn-primary btn-full" id="openNestedStep2" data-testid="btn-nested-step2">Next →</button>
+        </div>
+    </div>
+
+    <!-- Nested Modal (Step 2) -->
+    <div class="modal-overlay" id="nestedModal2" data-testid="nested-modal-2" style="z-index:2100;">
+        <div class="modal-box">
+            <button class="modal-close" id="closeNestedModal2" data-testid="close-nested-2" aria-label="Close">✕</button>
+            <h2 style="margin-bottom:10px;" data-testid="nested-modal-2-title">Step 2 of 2 — Nested!</h2>
+            <p style="color:var(--text-secondary); font-size:14px; margin-bottom:20px;">You are now inside a popup that was opened from another popup. Close this first, then close the previous one.</p>
+            <button class="btn btn-success btn-full" id="doneNested" data-testid="btn-done-nested">✅ Done — Close All</button>
+        </div>
+    </div>
+
+
+    <!-- Toast container -->
+    <div id="toast-container"></div>
+
+    <script src="js/toast.js"></script>
+    <script src="js/dashboard.js"></script>
+
+</body>
+</html>

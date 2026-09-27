@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create your AutomationLab account">
+    <title>Sign Up – AutomationLab</title>
+    <link rel="stylesheet" href="css/global.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-page {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 480px;
+            padding: 20px 0;
+        }
+
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .auth-logo a {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .auth-logo .logo-icon {
+            width: 40px; height: 40px;
+            background: var(--grad-primary);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+        }
+
+        .auth-logo .logo-name span {
+            background: var(--grad-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-card);
+            padding: 40px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .auth-header h1 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+        .auth-header p  { font-size: 14px; color: var(--text-secondary); }
+
+        .pw-wrap { position: relative; }
+        .pw-wrap input { padding-right: 45px; }
+        .pw-toggle {
+            position: absolute;
+            right: 12px; top: 50%;
+            transform: translateY(-50%);
+            background: none; border: none;
+            color: var(--text-muted);
+            cursor: pointer; font-size: 18px;
+            transition: var(--transition);
+        }
+        .pw-toggle:hover { color: var(--text-primary); }
+
+        .auth-error {
+            background: rgba(244,63,94,0.1);
+            border: 1px solid rgba(244,63,94,0.3);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            color: #fda4af;
+            font-size: 13px;
+            margin-bottom: 16px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+        .auth-error.visible { display: flex; }
+
+        .pw-strength {
+            margin-top: 6px;
+            display: flex;
+            gap: 4px;
+        }
+
+        .pw-bar {
+            height: 3px;
+            flex: 1;
+            border-radius: 2px;
+            background: var(--border-subtle);
+            transition: var(--transition);
+        }
+
+        .pw-bar.weak   { background: var(--accent-rose); }
+        .pw-bar.medium { background: var(--accent-amber); }
+        .pw-bar.strong { background: var(--accent-green); }
+
+        .pw-hint {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .auth-footer-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .auth-footer-link a {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .back-home {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            font-size: 13px;
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .back-home:hover { color: var(--text-secondary); }
+
+        .terms-note {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+
+    <div class="auth-page">
+
+        <!-- Logo -->
+        <div class="auth-logo">
+            <a href="/">
+                <div class="logo-icon">🤖</div>
+                <div class="logo-name"><span>Automation</span>Lab</div>
+            </a>
+        </div>
+
+        <!-- Card -->
+        <div class="auth-card">
+
+            <div class="auth-header">
+                <h1>Create Account 🎉</h1>
+                <p>Join AutomationLab and start practising</p>
+            </div>
+
+            <!-- Error -->
+            <div class="auth-error" id="signupError">
+                <span>⚠️</span>
+                <span id="signupErrorMsg">Something went wrong.</span>
+            </div>
+
+            <!-- Form -->
+            <form id="signupForm" novalidate>
+
+                <div class="form-group">
+                    <label class="form-label" for="signupName">Full Name</label>
+                    <input
+                        type="text"
+                        id="signupName"
+                        name="name"
+                        class="form-control"
+                        placeholder="Enter your full name"
+                        autocomplete="name"
+                        data-testid="signup-name"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="signupUsername">Username</label>
+                    <input
+                        type="text"
+                        id="signupUsername"
+                        name="username"
+                        class="form-control"
+                        placeholder="Choose a username"
+                        autocomplete="username"
+                        data-testid="signup-username"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="signupEmail">Email Address</label>
+                    <input
+                        type="email"
+                        id="signupEmail"
+                        name="email"
+                        class="form-control"
+                        placeholder="Enter your email"
+                        autocomplete="email"
+                        data-testid="signup-email"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="signupPassword">Password</label>
+                    <div class="pw-wrap">
+                        <input
+                            type="password"
+                            id="signupPassword"
+                            name="password"
+                            class="form-control"
+                            placeholder="Choose a strong password"
+                            autocomplete="new-password"
+                            data-testid="signup-password"
+                        >
+                        <button type="button" class="pw-toggle" id="signupPwToggle" aria-label="Toggle password">👁</button>
+                    </div>
+                    <div class="pw-strength" id="pwStrength">
+                        <div class="pw-bar" id="bar1"></div>
+                        <div class="pw-bar" id="bar2"></div>
+                        <div class="pw-bar" id="bar3"></div>
+                        <div class="pw-bar" id="bar4"></div>
+                    </div>
+                    <div class="pw-hint" id="pwHint">Min 8 characters with uppercase, number &amp; special char</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="signupConfirm">Confirm Password</label>
+                    <input
+                        type="password"
+                        id="signupConfirm"
+                        name="confirmPassword"
+                        class="form-control"
+                        placeholder="Re-enter your password"
+                        autocomplete="new-password"
+                        data-testid="signup-confirm-password"
+                    >
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary btn-full btn-lg"
+                    id="signupBtn"
+                    data-testid="signup-submit"
+                >
+                    🚀 Create Account
+                </button>
+
+            </form>
+
+            <div class="terms-note">
+                By creating an account you agree to our terms of service.
+            </div>
+
+            <div class="auth-footer-link">
+                Already have an account?
+                <a href="/login" data-testid="goto-login">Login</a>
+            </div>
+
+        </div>
+
+        <a href="/" class="back-home">← Back to Home</a>
+
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="js/toast.js"></script>
+    <script>
+        // Password toggle
+        document.getElementById('signupPwToggle').addEventListener('click', () => {
+            const inp = document.getElementById('signupPassword');
+            const btn = document.getElementById('signupPwToggle');
+            inp.type = inp.type === 'password' ? 'text' : 'password';
+            btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+        });
+
+        // Password strength
+        document.getElementById('signupPassword').addEventListener('input', () => {
+            const val = document.getElementById('signupPassword').value;
+            const bars = [
+                document.getElementById('bar1'),
+                document.getElementById('bar2'),
+                document.getElementById('bar3'),
+                document.getElementById('bar4')
+            ];
+            const hint = document.getElementById('pwHint');
+
+            let score = 0;
+            if (val.length >= 8)           score++;
+            if (/[A-Z]/.test(val))         score++;
+            if (/[0-9]/.test(val))         score++;
+            if (/[^A-Za-z0-9]/.test(val))  score++;
+
+            bars.forEach((bar, i) => {
+                bar.className = 'pw-bar';
+                if (i < score) {
+                    if (score === 1) bar.classList.add('weak');
+                    else if (score <= 2) bar.classList.add('medium');
+                    else bar.classList.add('strong');
+                }
+            });
+
+            const labels = ['', 'Weak', 'Medium', 'Strong', 'Very Strong'];
+            hint.textContent = val.length === 0 ? 'Min 8 characters with uppercase, number & special char' : labels[score];
+        });
+
+        // Signup submit
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name     = document.getElementById('signupName').value.trim();
+            const username = document.getElementById('signupUsername').value.trim();
+            const email    = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const confirm  = document.getElementById('signupConfirm').value;
+            const errBox   = document.getElementById('signupError');
+            const errMsg   = document.getElementById('signupErrorMsg');
+            const btn      = document.getElementById('signupBtn');
+
+            const showErr = (msg) => {
+                errMsg.textContent = msg;
+                errBox.classList.add('visible');
+            };
+
+            errBox.classList.remove('visible');
+
+            if (!name || !username || !email || !password || !confirm) {
+                return showErr('Please fill in all fields.');
+            }
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                return showErr('Please enter a valid email address.');
+            }
+
+            if (password.length < 8) {
+                return showErr('Password must be at least 8 characters.');
+            }
+
+            if (password !== confirm) {
+                return showErr('Passwords do not match.');
+            }
+
+            btn.disabled = true;
+            btn.textContent = '⏳ Creating account...';
+
+            try {
+                const res = await fetch('/api/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, username, email, password })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast('Account created! Redirecting…', 'success');
+                    setTimeout(() => { window.location.href = '/dashboard'; }, 900);
+                } else {
+                    showErr(data.message || 'Signup failed.');
+                    btn.disabled = false;
+                    btn.textContent = '🚀 Create Account';
+                }
+            } catch (err) {
+                showErr('Server error. Please try again.');
+                btn.disabled = false;
+                btn.textContent = '🚀 Create Account';
+            }
+        });
+
+        fetch('/api/me').then(r => r.json()).then(d => {
+            if (d.success) window.location.href = '/dashboard';
+        });
+    </script>
+
+</body>
+</html>

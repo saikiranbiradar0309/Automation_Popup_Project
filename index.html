@@ -2,114 +2,237 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Techie Profile</title>
 
-    <link rel="stylesheet" href="css/style.css">
+    <!-- CSS -->
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
 </head>
+
 
 <body>
 
-    <!-- Background decorations -->
+
+    <!-- =========================================
+         BACKGROUND DECORATIONS
+    ========================================== -->
+
     <div class="background-circle circle-1"></div>
+
     <div class="background-circle circle-2"></div>
 
-    <!-- Main Container -->
+
+
+    <!-- =========================================
+         MAIN CONTAINER
+    ========================================== -->
+
     <div class="container">
 
-        <!-- Left Side -->
+
+        <!-- =====================================
+             LEFT SECTION
+        ====================================== -->
+
         <div class="left-section">
 
+
+            <!-- Logo -->
+
             <div class="logo">
-                <span>&lt;/&gt;</span> Techie
+
+                <span>&lt;/&gt;</span>
+
+                Techie
+
             </div>
+
+
+
+            <!-- Hero Content -->
 
             <div class="hero-content">
 
-                <p class="small-title">WELCOME TO TECHIE</p>
 
-                <h1>
-                    Build your
-                    <span>Developer</span>
-                    Profile
-                </h1>
-
-                <p class="description">
-                    Create your professional tech profile and showcase
-                    your developer identity in one place.
+                <p class="small-title">
+                    WELCOME TO TECHIE
                 </p>
 
+
+                <h1>
+
+                    Build your
+
+                    <span>
+                        Developer
+                    </span>
+
+                    Profile
+
+                </h1>
+
+
+                <p class="description">
+
+                    Create your professional tech
+                    profile and showcase your developer
+                    identity in one place.
+
+                </p>
+
+
+
+                <!-- Technology Tags -->
+
                 <div class="tech-stack">
-                    <span>HTML</span>
-                    <span>CSS</span>
-                    <span>JavaScript</span>
-                    <span>Automation</span>
-                    <span>Cloud</span>
+
+                    <span>
+                        HTML
+                    </span>
+
+                    <span>
+                        CSS
+                    </span>
+
+                    <span>
+                        JavaScript
+                    </span>
+
+                    <span>
+                        Automation
+                    </span>
+
+                    <span>
+                        Cloud
+                    </span>
+
                 </div>
 
+
             </div>
+
 
         </div>
 
 
-        <!-- Right Side -->
+
+        <!-- =====================================
+             RIGHT SECTION
+        ====================================== -->
+
         <div class="right-section">
+
+
+            <!-- =================================
+                 PROFILE CARD
+            ================================== -->
 
             <div class="profile-card">
 
+
+                <!-- Card Header -->
+
                 <div class="card-header">
 
+
                     <div class="profile-icon">
+
                         👨‍💻
+
                     </div>
 
+
                     <div>
-                        <h2>Techie Profile</h2>
-                        <p>Create your account</p>
+
+                        <h2>
+                            Techie Profile
+                        </h2>
+
+                        <p>
+                            Create your account
+                        </p>
+
                     </div>
+
 
                 </div>
 
 
-                <!-- Form -->
+
+                <!-- =================================
+                     PROFILE FORM
+                ================================== -->
+
                 <form id="profileForm">
 
-                    <!-- Name -->
+
+                    <!-- Full Name -->
+
                     <div class="input-group">
 
-                        <label for="name">Full Name</label>
+                        <label for="name">
+                            Full Name
+                        </label>
+
 
                         <input
                             type="text"
                             id="name"
-                            placeholder="Enter your name"
+                            name="name"
+                            placeholder="Enter your full name"
+                            autocomplete="name"
                         >
 
                     </div>
 
 
+
                     <!-- Age -->
+
                     <div class="input-group">
 
-                        <label for="age">Age</label>
+                        <label for="age">
+                            Age
+                        </label>
+
 
                         <input
                             type="number"
                             id="age"
+                            name="age"
                             placeholder="Enter your age"
+                            min="18"
+                            max="100"
                         >
 
                     </div>
 
 
+
                     <!-- Occupation -->
+
                     <div class="input-group">
 
-                        <label for="occupation">Occupation</label>
+                        <label for="occupation">
+                            Occupation
+                        </label>
 
-                        <select id="occupation">
+
+                        <select
+                            id="occupation"
+                            name="occupation"
+                        >
 
                             <option value="">
                                 Select occupation
@@ -144,178 +267,414 @@
                     </div>
 
 
-                    <!-- Contact -->
+
+                    <!-- Contact Number -->
+
                     <div class="input-group">
 
-                        <label for="contact">Contact Number</label>
+                        <label for="contact">
+                            Contact Number
+                        </label>
+
 
                         <input
                             type="tel"
                             id="contact"
+                            name="contact"
                             placeholder="Enter contact number"
+                            autocomplete="tel"
                         >
 
                     </div>
 
 
+
                     <!-- Email -->
+
                     <div class="input-group">
 
-                        <label for="email">Email</label>
+                        <label for="email">
+                            Email
+                        </label>
+
 
                         <input
                             type="email"
                             id="email"
+                            name="email"
                             placeholder="Enter email address"
+                            autocomplete="email"
                         >
 
                     </div>
 
 
+
                     <!-- Password -->
+
                     <div class="input-group">
 
-                        <label for="password">Password</label>
+                        <label for="password">
+                            Password
+                        </label>
+
 
                         <div class="password-container">
+
 
                             <input
                                 type="password"
                                 id="password"
+                                name="password"
                                 placeholder="Enter password"
+                                autocomplete="new-password"
                             >
+
 
                             <button
                                 type="button"
                                 id="togglePassword"
+                                aria-label="Show or hide password"
                             >
                                 👁
                             </button>
 
+
                         </div>
+
 
                     </div>
 
 
-                    <!-- Sign In -->
+
+                    <!-- Sign In Button -->
+
                     <button
                         type="submit"
                         class="signin-btn"
                     >
+
                         Sign In
-                        <span>→</span>
+
+                        <span>
+                            →
+                        </span>
+
                     </button>
+
 
                 </form>
 
 
-                <!-- Test User -->
+
+                <!-- =================================
+                     TEST USER
+                ================================== -->
+
                 <div class="test-user">
 
+
                     <div class="test-header">
-                        <span>🧪</span>
-                        <strong>Test User</strong>
+
+                        <span>
+                            🧪
+                        </span>
+
+                        <strong>
+                            Test User
+                        </strong>
+
                     </div>
+
 
                     <p>
                         Use these credentials for testing:
                     </p>
 
+
+
                     <div class="credentials">
 
+
+                        <!-- Username -->
+
                         <div>
-                            <span>Username</span>
+
+                            <span>
+                                Username
+                            </span>
+
                             <strong id="testUsername">
                                 techie@test.com
                             </strong>
+
                         </div>
 
+
+
+                        <!-- Password -->
+
                         <div>
-                            <span>Password</span>
+
+                            <span>
+                                Password
+                            </span>
+
                             <strong id="testPassword">
                                 Techie@123
                             </strong>
+
                         </div>
+
 
                     </div>
 
+
                 </div>
+
 
             </div>
 
+
         </div>
+
 
     </div>
 
 
-    <!-- Success Popup -->
+
+    <!-- ==================================================
+         SUCCESS POPUP / MODAL
+    =================================================== -->
 
     <div
         class="modal-overlay"
         id="successModal"
     >
 
+
         <div class="modal">
+
+
+            <!-- Close Button -->
 
             <button
                 class="close-btn"
                 id="closeModal"
+                type="button"
+                aria-label="Close success popup"
             >
                 ×
             </button>
 
+
+
+            <!-- Success Icon -->
+
             <div class="success-icon">
+
                 ✓
+
             </div>
 
-            <h2>Welcome, Techie! 🎉</h2>
+
+
+            <!-- Heading -->
+
+            <h2>
+                Welcome, Techie! 🎉
+            </h2>
+
 
             <p>
                 Your profile has been created successfully.
             </p>
 
+
+
+            <!-- =================================
+                 USER DETAILS
+            ================================== -->
+
             <div class="user-details">
 
-                <div>
-                    <span>Name</span>
-                    <strong id="displayName"></strong>
-                </div>
+
+                <!-- Name -->
 
                 <div>
-                    <span>Age</span>
-                    <strong id="displayAge"></strong>
+
+                    <span>
+                        Name
+                    </span>
+
+                    <strong id="displayName">
+                    </strong>
+
                 </div>
 
-                <div>
-                    <span>Occupation</span>
-                    <strong id="displayOccupation"></strong>
-                </div>
+
+
+                <!-- Age -->
 
                 <div>
-                    <span>Contact</span>
-                    <strong id="displayContact"></strong>
+
+                    <span>
+                        Age
+                    </span>
+
+                    <strong id="displayAge">
+                    </strong>
+
                 </div>
 
+
+
+                <!-- Occupation -->
+
                 <div>
-                    <span>Email</span>
-                    <strong id="displayEmail"></strong>
+
+                    <span>
+                        Occupation
+                    </span>
+
+                    <strong id="displayOccupation">
+                    </strong>
+
                 </div>
+
+
+
+                <!-- Contact -->
+
+                <div>
+
+                    <span>
+                        Contact
+                    </span>
+
+                    <strong id="displayContact">
+                    </strong>
+
+                </div>
+
+
+
+                <!-- Email -->
+
+                <div>
+
+                    <span>
+                        Email
+                    </span>
+
+                    <strong id="displayEmail">
+                    </strong>
+
+                </div>
+
 
             </div>
+
+
+
+            <!-- Continue Button -->
 
             <button
                 class="done-btn"
                 id="doneBtn"
+                type="button"
             >
                 Continue
             </button>
 
+
         </div>
+
 
     </div>
 
 
+
+    <!-- ==================================================
+         RANDOM / INTERMITTENT ERROR POPUP
+    =================================================== -->
+
+    <div
+        class="modal-overlay"
+        id="errorModal"
+    >
+
+
+        <div class="modal error-modal">
+
+
+            <!-- Close Button -->
+
+            <button
+                class="close-btn"
+                id="closeErrorModal"
+                type="button"
+                aria-label="Close error popup"
+            >
+                ×
+            </button>
+
+
+
+            <!-- Error Icon -->
+
+            <div class="error-icon">
+
+                !
+
+            </div>
+
+
+
+            <!-- Error Heading -->
+
+            <h2>
+                Validation Error
+            </h2>
+
+
+
+            <!-- Dynamic Error Message -->
+
+            <p id="errorMessage">
+
+                Full Name must start with capital letters.
+
+            </p>
+
+
+
+            <!-- Try Again -->
+
+            <button
+                class="done-btn error-btn"
+                id="errorDoneBtn"
+                type="button"
+            >
+
+                Try Again
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
     <script src="js/script.js"></script>
+
 
 </body>
 

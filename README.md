@@ -1,453 +1,404 @@
-# 👨‍💻 Techie Profile
+# 🤖 AutomationLab — Selenium & Playwright Practice Platform
 
-A modern and responsive **Techie Profile Web Application** built using **HTML, CSS, and JavaScript**.
-
-The application allows users to enter their personal and professional details and displays the submitted information in a success popup.
-
-It also contains a predefined **test user** for practicing UI automation with tools such as **Selenium** and **Playwright**.
+A full-stack interactive web application built specifically for practising **Selenium WebDriver** and **Playwright** automation testing. It covers all the real-world UI patterns that automation engineers encounter daily.
 
 ---
 
-## 🚀 Features
+## ✨ What's Inside
 
-* Modern developer/tech-themed UI
-* Responsive design
-* User profile form
-* Name input
-* Age input
-* Occupation dropdown
-* Contact number input
-* Email input
-* Password input
-* Show/Hide password functionality
-* Form validation
-* Sign In button
-* Success popup/modal
-* Dynamic display of entered user details
-* Predefined test user credentials
-* Suitable for Selenium and Playwright automation practice
+| Module | Scenarios Covered |
+|--------|-------------------|
+| 💬 **Popups & Alerts** | Browser alert, confirm, prompt; custom success/error/timed/nested modals |
+| 📅 **Calendar** | HTML date input, custom JS calendar (month/year navigation), date range picker |
+| ☑️ **Checkboxes** | Individual, group, select-all with indeterminate state |
+| 📝 **Input & Radio** | Text, number, email, password, URL, tel, range, color, search, textarea, readonly, disabled, radio groups |
+| 🔽 **Dropdowns** | HTML select, multi-select, custom searchable dropdown, chained (Country → State → City) |
+| 🪟 **Frames** | Single iframe, nested iframes (outer → inner), dynamically loaded iframe |
+| 📤 **File Upload** | Single file upload, multiple files, drag-and-drop zone — real `POST /api/upload` |
+
+---
+
+## 🏗 Tech Stack
+
+```text
+Backend   : Node.js v24 + Express.js
+Auth      : express-session (cookie-based sessions)
+Upload    : Multer (multipart/form-data)
+Frontend  : HTML5 + Vanilla CSS + Vanilla JavaScript
+Fonts     : Google Fonts (Inter, JetBrains Mono)
+```
 
 ---
 
 ## 📁 Project Structure
 
 ```text
-techie-profile/
+Automation_Popup_Project/
 │
-├── index.html
+├── server.js                   ← Node.js Express server (entry point)
+├── package.json
 │
-├── css/
+├── public/                     ← Static files served by Express
+│   ├── index.html              ← Home / Landing page
+│   ├── login.html              ← Login page (with test credentials)
+│   ├── signup.html             ← Sign-up page
+│   ├── dashboard.html          ← Protected practice dashboard
+│   │
+│   ├── css/
+│   │   └── global.css          ← Design system, tokens, components
+│   │
+│   ├── js/
+│   │   ├── toast.js            ← Toast notification utility
+│   │   └── dashboard.js        ← All dashboard & module logic
+│   │
+│   └── uploads/                ← Uploaded files saved here
+│
+├── css/                        ← Legacy (original project CSS)
 │   └── style.css
-│
-└── js/
+└── js/                         ← Legacy (original project JS)
     └── script.js
 ```
 
-### File Description
+---
 
-| File            | Purpose                                                                |
-| --------------- | ---------------------------------------------------------------------- |
-| `index.html`    | Contains the application's HTML structure                              |
-| `css/style.css` | Contains styling, layout, animations, and responsive design            |
-| `js/script.js`  | Contains form validation, popup handling, and JavaScript functionality |
+## 🛠 Prerequisites
+
+| Requirement | Version |
+|-------------|---------|
+| **Node.js** | v18 or higher (v24 recommended) |
+| **npm** | v8 or higher |
+| A modern browser | Chrome, Firefox, Edge, Safari |
+
+> Check your versions:
+> ```bash
+> node --version
+> npm --version
+> ```
 
 ---
 
-# 🛠️ Prerequisites
+## ▶️ How to Run
 
-You don't need any backend server or database to run this application.
-
-You only need:
-
-* A modern web browser
-* VS Code or another code editor
-* Optional: VS Code **Live Server** extension
-
-Recommended browsers:
-
-* Google Chrome
-* Microsoft Edge
-* Mozilla Firefox
-
----
-
-# ▶️ How to Run
-
-## Method 1 — Open Directly in Browser
-
-This is the simplest method.
-
-### Step 1: Download or clone the project
-
-If you have the project in Git:
+### Step 1 — Clone the repository
 
 ```bash
 git clone https://github.com/saikiranbiradar0309/Automation_Popup_Project.git
-```
-
-Then move into the project directory:
-
-```bash
 cd Automation_Popup_Project
 ```
 
-### Step 2: Open `index.html`
+### Step 2 — Install dependencies
 
-Open the following file:
-
-```text
-index.html
+```bash
+npm install
 ```
 
-You can simply double-click `index.html`.
+This installs:
+- `express` — HTTP server framework
+- `express-session` — cookie-based session management
+- `multer` — file upload middleware
 
-The application will open in your default browser.
+### Step 3 — Start the server
+
+```bash
+npm start
+```
+
+or directly:
+
+```bash
+node server.js
+```
+
+### Step 4 — Open in browser
+
+```
+http://localhost:3000
+```
+
+You should see the AutomationLab home page.
 
 ---
 
-# ⭐ Method 2 — Run Using VS Code Live Server
+## 📄 Pages & Routes
 
-This method is recommended for development and automation practice.
+| URL | Page | Auth Required |
+|-----|------|:---:|
+| `http://localhost:3000/` | 🏠 Home page | ❌ |
+| `http://localhost:3000/login` | 🔐 Login | ❌ |
+| `http://localhost:3000/signup` | 📝 Sign Up | ❌ |
+| `http://localhost:3000/dashboard` | 🧭 Practice Dashboard | ✅ |
 
-### Step 1: Open the project
-
-Open the `Automation_Popup_Project` folder in VS Code.
-
-### Step 2: Install Live Server
-
-In VS Code:
-
-```text
-Extensions
-    ↓
-Search "Live Server"
-    ↓
-Install
-```
-
-### Step 3: Start the application
-
-Right-click:
-
-```text
-index.html
-```
-
-and select:
-
-```text
-Open with Live Server
-```
-
-The browser will automatically open the application.
-
-You will see a URL similar to:
-
-```text
-http://127.0.0.1:5500/index.html
-```
-
-or:
-
-```text
-http://localhost:5500/index.html
-```
+> The dashboard redirects to `/login` if you are not logged in.
 
 ---
 
-# 🧪 Test User
+## 🔑 Test Credentials
 
-The application contains a predefined test user for testing purposes.
+Three pre-built test accounts are available. They are displayed directly on the login page for easy copy-paste or automation.
 
-```text
-Username:
-techie@test.com
+| Username | Password | Name |
+|----------|----------|------|
+| `testuser` | `Test@1234` | Test User |
+| `admin` | `Admin@123` | Admin User |
+| `practice` | `Practice@99` | Practice User |
 
-Password:
-Techie@123
-```
-
-These credentials are displayed directly on the application because this project is intended for **UI automation practice**.
-
-> ⚠️ Do not use this approach for a real production application. Real passwords should never be exposed in frontend HTML/JavaScript.
+You can also sign up to create a new account (stored in-memory for the session).
 
 ---
 
-# 📝 How to Use the Application
+## 🔌 REST API Endpoints
 
-### Step 1
-
-Open the application.
-
-### Step 2
-
-Enter your:
-
-```text
-Full Name
-Age
-Occupation
-Contact Number
-Email
-Password
-```
-
-### Step 3
-
-Click:
-
-```text
-Sign In →
-```
-
-### Step 4
-
-The application validates the entered information.
-
-If all fields are valid, a popup will appear:
-
-```text
-Welcome, Techie! 🎉
-
-Your profile has been created successfully.
-```
-
-The popup displays the entered:
-
-* Name
-* Age
-* Occupation
-* Contact
-* Email
+| Method | Endpoint | Body | Description |
+|--------|----------|------|-------------|
+| `POST` | `/api/login` | `{ username, password }` | Authenticate and create session |
+| `POST` | `/api/signup` | `{ name, username, email, password }` | Register new user |
+| `GET` | `/api/me` | — | Get current logged-in user |
+| `POST` | `/api/logout` | — | Destroy session |
+| `POST` | `/api/upload` | `multipart/form-data` (field: `file`) | Upload a file (max 5 MB) |
+| `POST` | `/api/submit-form` | Any JSON body | Echo form data back as JSON |
 
 ---
 
-# 🔐 Password Show/Hide
+## 🧪 Automation Testing Examples
 
-The password field contains an eye icon:
+### Selenium (Python)
 
-```text
-Password
-[ ************ 👁 ]
+```python
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait, Select
+from selenium.webdriver.support import expected_conditions as EC
+
+driver = webdriver.Chrome()
+driver.get("http://localhost:3000/login")
+
+# Fill credentials
+driver.find_element(By.ID, "loginUsername").send_keys("testuser")
+driver.find_element(By.ID, "loginPassword").send_keys("Test@1234")
+driver.find_element(By.ID, "loginBtn").click()
+
+# Wait for dashboard
+WebDriverWait(driver, 10).until(EC.url_contains("/dashboard"))
+
+# Navigate to Dropdowns module via sidebar
+driver.find_element(By.CSS_SELECTOR, '[data-testid="sidebar-dropdown"]').click()
+
+# Use the standard select
+select = Select(driver.find_element(By.ID, "selCountry"))
+select.select_by_visible_text("🇮🇳 India")
 ```
 
-Clicking the eye icon changes the password between:
+### Selenium (Java)
 
-```text
-********
+```java
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.*;
+
+WebDriver driver = new ChromeDriver();
+driver.get("http://localhost:3000/login");
+
+driver.findElement(By.id("loginUsername")).sendKeys("testuser");
+driver.findElement(By.id("loginPassword")).sendKeys("Test@1234");
+driver.findElement(By.id("loginBtn")).click();
+
+WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+wait.until(ExpectedConditions.urlContains("/dashboard"));
+
+// Click Calendar in sidebar
+driver.findElement(By.cssSelector("[data-testid='sidebar-calendar']")).click();
+
+// Set date
+driver.findElement(By.id("dateInput")).sendKeys("2025-12-25");
+driver.findElement(By.id("submitDate")).click();
 ```
 
-and:
+### Playwright (Python)
 
-```text
-Techie@123
+```python
+from playwright.sync_api import sync_playwright
+
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=False)
+    page = browser.new_page()
+
+    # Login
+    page.goto("http://localhost:3000/login")
+    page.get_by_test_id("login-username").fill("testuser")
+    page.get_by_test_id("login-password").fill("Test@1234")
+    page.get_by_test_id("login-submit").click()
+    page.wait_for_url("**/dashboard**")
+
+    # Open Popups module
+    page.get_by_test_id("sidebar-popups").click()
+
+    # Trigger browser alert and accept it
+    page.on("dialog", lambda dialog: dialog.accept())
+    page.get_by_test_id("btn-alert").click()
+
+    # Open success modal and close it
+    page.get_by_test_id("btn-success-modal").click()
+    page.wait_for_selector('[data-testid="success-modal"]', state="visible")
+    page.get_by_test_id("confirm-success").click()
+
+    browser.close()
 ```
 
----
+### Playwright (TypeScript)
 
-# ✅ Form Validation
-
-The application checks that all fields are filled.
-
-It also validates:
-
-### Age
-
-Age must be between:
-
-```text
-18 - 100
-```
-
-### Email
-
-The email must contain:
-
-```text
-@
-```
-
-### Password
-
-The password must contain at least:
-
-```text
-6 characters
-```
-
----
-
-# 🧪 Automation Testing
-
-This application can be used to practice **Selenium WebDriver** and **Playwright**.
-
-## Example Playwright Test
-
-```javascript
+```typescript
 import { test, expect } from '@playwright/test';
 
-test('Create Techie Profile', async ({ page }) => {
+test('login and navigate to frames module', async ({ page }) => {
+    await page.goto('http://localhost:3000/login');
 
-    await page.goto('http://127.0.0.1:5500/index.html');
+    await page.getByTestId('login-username').fill('testuser');
+    await page.getByTestId('login-password').fill('Test@1234');
+    await page.getByTestId('login-submit').click();
 
-    await page.locator('#name')
-        .fill('Saikiran');
+    await expect(page).toHaveURL(/dashboard/);
 
-    await page.locator('#age')
-        .fill('28');
+    // Navigate to Frames
+    await page.getByTestId('sidebar-frames').click();
 
-    await page.locator('#occupation')
-        .selectOption('DevOps Engineer');
-
-    await page.locator('#contact')
-        .fill('9876543210');
-
-    await page.locator('#email')
-        .fill('saikiran@test.com');
-
-    await page.locator('#password')
-        .fill('Techie@123');
-
-    await page.locator('.signin-btn')
-        .click();
-
-    await expect(
-        page.locator('#successModal')
-    ).toBeVisible();
-
+    // Switch to iframe and interact
+    const frame = page.frameLocator('#single-frame');
+    await frame.locator('#frame-input').fill('Hello from inside the frame!');
 });
 ```
 
 ---
 
-# 🔎 Useful Locators
+## 🔎 Key Element Locators (`data-testid`)
 
-The application provides useful IDs and classes for automation practice.
+### Login Page
+| Element | `data-testid` | `id` |
+|---------|--------------|------|
+| Username input | `login-username` | `loginUsername` |
+| Password input | `login-password` | `loginPassword` |
+| Login button | `login-submit` | `loginBtn` |
 
-| Element            | Locator              |
-| ------------------ | -------------------- |
-| Name               | `#name`              |
-| Age                | `#age`               |
-| Occupation         | `#occupation`        |
-| Contact            | `#contact`           |
-| Email              | `#email`             |
-| Password           | `#password`          |
-| Toggle Password    | `#togglePassword`    |
-| Sign In            | `.signin-btn`        |
-| Success Modal      | `#successModal`      |
-| Close Modal        | `#closeModal`        |
-| Continue           | `#doneBtn`           |
-| Display Name       | `#displayName`       |
-| Display Age        | `#displayAge`        |
-| Display Occupation | `#displayOccupation` |
-| Display Contact    | `#displayContact`    |
-| Display Email      | `#displayEmail`      |
+### Dashboard Sidebar
+| Module | `data-testid` |
+|--------|--------------|
+| Home | `sidebar-home` |
+| Popups | `sidebar-popups` |
+| Calendar | `sidebar-calendar` |
+| Checkboxes | `sidebar-checkboxes` |
+| Inputs & Radio | `sidebar-inputs` |
+| Dropdowns | `sidebar-dropdown` |
+| Frames | `sidebar-frames` |
+| File Upload | `sidebar-upload` |
+
+### Popups Module
+| Element | `data-testid` |
+|---------|--------------|
+| Alert button | `btn-alert` |
+| Confirm button | `btn-confirm` |
+| Prompt button | `btn-prompt` |
+| Success modal trigger | `btn-success-modal` |
+| Error modal trigger | `btn-error-modal` |
+| Timed popup trigger | `btn-timed-modal` |
+| Nested popup trigger | `btn-nested-modal` |
+| Success modal overlay | `success-modal` |
+| Close success modal | `close-success-modal` |
+| Confirm button (inside modal) | `confirm-success` |
+
+### Calendar Module
+| Element | `data-testid` |
+|---------|--------------|
+| HTML date input | `date-input` |
+| HTML datetime input | `datetime-input` |
+| Submit date button | `submit-date` |
+| Custom calendar | `custom-calendar` |
+| Previous month | `cal-prev` |
+| Next month | `cal-next` |
+| Month/year label | `cal-month-year` |
+| Day cell (N=day number) | `cal-day-N` |
+| Selected date display | `cal-selected-date` |
+| Check-in date | `checkin-date` |
+| Check-out date | `checkout-date` |
+
+### Dropdowns Module
+| Element | `data-testid` |
+|---------|--------------|
+| Country select | `sel-country` |
+| Role select | `sel-role` |
+| Multi-select | `multi-select` |
+| Custom dropdown trigger | `custom-dropdown-trigger` |
+| Custom dropdown search | `custom-dropdown-search` |
+| Option (e.g. Python) | `opt-python` |
+| Chained country | `dep-country` |
+| Chained state | `dep-state` |
+| Chained city | `dep-city` |
+
+### Frames Module
+| Element | `data-testid` / `id` / `name` |
+|---------|-------------------------------|
+| Single iframe | `id="single-frame"` / `name="singleFrame"` |
+| Outer nested iframe | `id="outer-frame"` / `name="outerFrame"` |
+| Inner nested iframe | `id="inner-frame"` / `name="innerFrame"` |
+| Dynamic iframe (after load) | `id="dynamic-frame"` |
+| Load dynamic frame button | `btn-load-dynamic-frame` |
+
+### File Upload Module
+| Element | `data-testid` |
+|---------|--------------|
+| Single file input | `single-file-input` |
+| Upload single button | `btn-upload-single` |
+| Multiple file input | `multi-file-input` |
+| Upload multiple button | `btn-upload-multiple` |
+| Drag & drop zone | `dropzone` |
 
 ---
 
-# 🧩 Technologies Used
+## 🧩 Technologies Used
 
 ```text
-HTML5
-CSS3
-JavaScript
+Node.js         ← JavaScript runtime
+Express.js      ← HTTP server & routing
+express-session ← Session-based authentication
+Multer          ← File upload handling
+HTML5           ← Page structure & semantic elements
+Vanilla CSS     ← Design system, glassmorphism, animations
+Vanilla JS      ← All UI logic — no frameworks
+Google Fonts    ← Inter & JetBrains Mono
 ```
-
-No external framework is required.
-
-No backend is required.
-
-No database is required.
 
 ---
 
-# 📱 Responsive Design
+## 📱 Responsive Design
 
 The application supports:
-
-* Desktop
-* Laptop
-* Tablet
-* Mobile
-
-The layout automatically changes based on screen size using CSS media queries.
+- 🖥 Desktop (1200px+)
+- 💻 Laptop (1024px)
+- 📱 Mobile / Tablet
 
 ---
 
-# 🔮 Future Improvements
+## ⚠️ Security Note
 
-The application can be extended with:
+This is a **practice/educational application**. Credentials are intentionally visible on the login page to make automation practice easier.
 
-* Backend API
-* Database integration
-* Real authentication
-* JWT authentication
-* User registration
-* Login page
-* Password hashing
-* Profile editing
-* Profile image upload
-* Dashboard
-* REST API integration
-* Test reports
-* Selenium automation framework
-* Playwright automation framework
-* CI/CD using GitHub Actions
+> Do **not** use this architecture in a production application. In production, passwords must be hashed (e.g. bcrypt) and stored in a database.
 
 ---
 
-# ⚠️ Important Security Note
+## 👨‍💻 Author
 
-This is a **frontend demo application**.
+**Sai Kiran Biradar**
 
-The test username and password are intentionally visible in:
-
-```text
-index.html
+Built for learning and practising:
 ```
-
-and:
-
-```text
-script.js
-```
-
-Therefore, this application **does not provide real authentication or secure password storage**.
-
-For a production application:
-
-```text
-Frontend
-    ↓
-Backend API
-    ↓
-Authentication Service
-    ↓
-Database
-```
-
-Passwords should be securely hashed on the backend and should never be stored as plaintext in frontend JavaScript.
-
----
-
-# 👨‍💻 Author
-
-**Techie Profile Demo**
-
-Built for learning and practicing:
-
-```text
-HTML
-CSS
-JavaScript
-Selenium
-Playwright
+Selenium WebDriver (Python, Java, C#, JS)
+Playwright (Python, TypeScript)
 UI Automation Testing
+REST API Testing
+Node.js + Express
 ```
 
 ---
 
 ## 📄 License
 
-This project is intended for educational and automation-testing practice.
-
+This project is intended for educational and automation-testing practice purposes only.

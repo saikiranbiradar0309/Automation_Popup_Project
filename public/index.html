@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AutomationLab – The ultimate practice platform for Selenium and Playwright automation testing. Practice popups, calendars, checkboxes, dropdowns, frames, and file uploads.">
+    <title>AutomationLab – Selenium & Playwright Practice Platform</title>
+    <link rel="stylesheet" href="css/global.css">
+    <style>
+        /* ── PAGE SPECIFIC ── */
+
+        .page-wrap {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── HERO ── */
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: calc(var(--nav-h) + 40px) 80px 80px;
+        }
+
+        .hero-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: rgba(59,130,246,0.12);
+            border: 1px solid rgba(59,130,246,0.25);
+            color: #93c5fd;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .hero-eyebrow .dot {
+            width: 6px; height: 6px;
+            background: #3b82f6;
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+        }
+
+        .hero-title {
+            font-size: 64px;
+            font-weight: 900;
+            line-height: 1.08;
+            margin-bottom: 24px;
+            letter-spacing: -1.5px;
+        }
+
+        .hero-title .grad-text {
+            background: var(--grad-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            line-height: 1.75;
+            max-width: 520px;
+            margin-bottom: 40px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 32px;
+            margin-top: 52px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--grad-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── HERO RIGHT (Module Preview Cards) ── */
+
+        .hero-visual {
+            position: relative;
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .module-preview-card {
+            padding: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            backdrop-filter: blur(20px);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-preview-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--grad-primary);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .module-preview-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59,130,246,0.4);
+            box-shadow: 0 12px 40px rgba(59,130,246,0.15);
+        }
+
+        .module-preview-card:hover::before { opacity: 0.04; }
+
+        .module-preview-card .card-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .module-preview-card .card-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .module-preview-card .card-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ── FEATURES SECTION ── */
+
+        .section {
+            padding: 100px 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .feature-card {
+            padding: 28px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(20px);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            border-color: rgba(59,130,246,0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .feature-icon-wrap {
+            width: 52px; height: 52px;
+            border-radius: var(--radius-md);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+            margin-bottom: 18px;
+        }
+
+        .feature-card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ── TECH STACK SECTION ── */
+
+        .tech-section {
+            text-align: center;
+            padding: 60px 80px;
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .tech-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+        }
+
+        .tech-badges {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .tech-badge {
+            padding: 10px 20px;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-subtle);
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .tech-badge:hover {
+            background: var(--bg-glass-hover);
+            color: var(--text-primary);
+            border-color: rgba(59,130,246,0.4);
+        }
+
+        /* ── CTA SECTION ── */
+
+        .cta-section {
+            text-align: center;
+            padding: 100px 80px;
+        }
+
+        .cta-card {
+            background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(124,58,237,0.12));
+            border: 1px solid rgba(59,130,246,0.25);
+            border-radius: var(--radius-xl);
+            padding: 70px 60px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-card h2 {
+            font-size: 40px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+
+        .cta-card p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto 36px;
+        }
+
+        /* ── FOOTER ── */
+
+        footer {
+            text-align: center;
+            padding: 32px 40px;
+            border-top: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        footer span {
+            color: var(--accent-blue);
+        }
+
+        /* ── RESPONSIVE ── */
+
+        @media (max-width: 1024px) {
+            .hero-inner { grid-template-columns: 1fr; gap: 60px; }
+            .hero { padding: calc(var(--nav-h) + 40px) 40px 60px; }
+            .hero-title { font-size: 48px; }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .section { padding: 70px 40px; }
+        }
+
+        @media (max-width: 680px) {
+            .hero-title { font-size: 36px; }
+            .module-grid { grid-template-columns: 1fr; }
+            .features-grid { grid-template-columns: 1fr; }
+            .hero-stats { gap: 20px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background Orbs -->
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+
+    <!-- ==========================================
+         NAVBAR
+    =========================================== -->
+
+    <nav class="navbar" id="mainNavbar">
+        <a href="/" class="navbar-brand">
+            <div class="brand-icon">🤖</div>
+            <div class="brand-name">
+                <span>Automation</span>Lab
+            </div>
+        </a>
+        <div class="navbar-nav">
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#modules" class="nav-link">Modules</a>
+            <a href="/login" class="btn-nav-login" id="navLoginBtn">Login</a>
+            <a href="/signup" class="btn-nav-signup" id="navSignupBtn">Sign Up</a>
+            <a href="/dashboard" class="btn-nav-signup" id="navDashBtn" style="display:none;">Dashboard</a>
+        </div>
+    </nav>
+
+
+    <!-- ==========================================
+         PAGE CONTENT
+    =========================================== -->
+
+    <div class="page-wrap">
+
+        <!-- ── HERO ── -->
+
+        <section class="hero">
+            <div class="hero-inner">
+
+                <!-- Left: Text -->
+                <div class="hero-left">
+
+                    <div class="hero-eyebrow">
+                        <span class="dot"></span>
+                        Selenium &amp; Playwright Practice Platform
+                    </div>
+
+                    <h1 class="hero-title">
+                        Master Test
+                        <span class="grad-text">Automation</span>
+                        Like a Pro
+                    </h1>
+
+                    <p class="hero-subtitle">
+                        A fully interactive platform with real-world web elements designed
+                        specifically for practising Selenium and Playwright automation scripts.
+                        No setup headaches — just open and automate.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="/signup" class="btn btn-primary btn-lg">
+                            🚀 Start Practising Free
+                        </a>
+                        <a href="/login" class="btn btn-outline btn-lg">
+                            Login to Dashboard
+                        </a>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">7+</div>
+                            <div class="stat-label">Practice Modules</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">50+</div>
+                            <div class="stat-label">Test Scenarios</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">100%</div>
+                            <div class="stat-label">Free to Use</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right: Module preview grid -->
+                <div class="hero-visual" id="modules">
+                    <div class="module-grid">
+
+                        <div class="module-preview-card" onclick="goToDashboard('popups')">
+                            <span class="card-icon">💬</span>
+                            <div class="card-name">Popups &amp; Alerts</div>
+                            <div class="card-desc">Alert, confirm, prompt &amp; custom modal dialogs</div>
+                        </div>
+
+                        <div class="module-preview-card" onclick="goToDashboard('calendar')">
+                            <span class="card-icon">📅</span>
+                            <div class="card-name">Calendar</div>
+                            <div class="card-desc">Date picker, date range &amp; time selection</div>
+                        </div>
+
+                        <div class="module-preview-card" onclick="goToDashboard('checkboxes')">
+                            <span class="card-icon">☑️</span>
+                            <div class="card-name">Checkboxes</div>
+                            <div class="card-desc">Single, group, indeterminate state checks</div>
+                        </div>
+
+                        <div class="module-preview-card" onclick="goToDashboard('inputs')">
+                            <span class="card-icon">📝</span>
+                            <div class="card-name">Input &amp; Radio</div>
+                            <div class="card-desc">Text, number, email, password &amp; radio buttons</div>
+                        </div>
+
+                        <div class="module-preview-card" onclick="goToDashboard('dropdown')">
+                            <span class="card-icon">🔽</span>
+                            <div class="card-name">Dropdowns</div>
+                            <div class="card-desc">Select, multi-select &amp; custom dropdowns</div>
+                        </div>
+
+                        <div class="module-preview-card" onclick="goToDashboard('frames')">
+                            <span class="card-icon">🪟</span>
+                            <div class="card-name">Frames</div>
+                            <div class="card-desc">iframe, nested frames &amp; frame switching</div>
+                        </div>
+
+                        <div class="module-preview-card" onclick="goToDashboard('upload')" style="grid-column: span 2;">
+                            <span class="card-icon">📤</span>
+                            <div class="card-name">File Upload</div>
+                            <div class="card-desc">Single &amp; multiple file upload with validation</div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ── TECH SECTION ── -->
+
+        <div class="tech-section">
+            <div class="tech-label">Works perfectly with</div>
+            <div class="tech-badges">
+                <div class="tech-badge">🐍 Python Selenium</div>
+                <div class="tech-badge">☕ Java Selenium</div>
+                <div class="tech-badge">🎭 Playwright Python</div>
+                <div class="tech-badge">🎭 Playwright TypeScript</div>
+                <div class="tech-badge">🟢 Node.js Selenium</div>
+                <div class="tech-badge">🔷 C# Selenium</div>
+                <div class="tech-badge">🤖 Robot Framework</div>
+            </div>
+        </div>
+
+
+        <!-- ── FEATURES ── -->
+
+        <section class="section" id="features">
+            <div class="section-header">
+                <h2 class="section-title">Everything You Need to Practice</h2>
+                <p class="section-subtitle">
+                    Real elements, real challenges. Built to reflect actual production websites your automation scripts will face.
+                </p>
+            </div>
+
+            <div class="features-grid">
+
+                <div class="feature-card">
+                    <div class="feature-icon-wrap" style="background: rgba(59,130,246,0.15);">💬</div>
+                    <h3>Popups &amp; Modals</h3>
+                    <p>Browser alert, confirm, prompt dialogs plus custom JS modals. Timed popups, nested popups and unexpected popups to test your wait strategies.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-wrap" style="background: rgba(16,185,129,0.15);">📅</div>
+                    <h3>Calendar Handling</h3>
+                    <p>Navigate month/year pickers, select date ranges, test disabled dates and verify min/max constraints — the exact scenarios you encounter in e-commerce and booking sites.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-wrap" style="background: rgba(245,158,11,0.15);">☑️</div>
+                    <h3>Checkboxes</h3>
+                    <p>Individual, group, and indeterminate state checkboxes. Select-all functionality with dynamic state tracking to test your check/uncheck logic.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-wrap" style="background: rgba(124,58,237,0.15);">📝</div>
+                    <h3>Inputs &amp; Radio Buttons</h3>
+                    <p>Text, number, email, URL, password, date, color, range, and textarea inputs. Radio button groups with form submission and validation.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-wrap" style="background: rgba(6,182,212,0.15);">🔽</div>
+                    <h3>Dropdowns</h3>
+                    <p>Standard HTML select, multi-select, and custom JavaScript-driven dropdown menus. Searchable dropdowns to test your Select2 and custom element strategies.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-wrap" style="background: rgba(244,63,94,0.15);">🪟</div>
+                    <h3>Frames &amp; iFrames</h3>
+                    <p>Single frames, nested frames and dynamically loaded iframes. Switch between frames and interact with content inside — a classic automation challenge.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-wrap" style="background: rgba(249,115,22,0.15);">📤</div>
+                    <h3>File Upload</h3>
+                    <p>Standard input upload, drag-and-drop zone, multiple file upload and file type/size validation. Practice sendKeys and interacting with file dialogs.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-wrap" style="background: rgba(16,185,129,0.15);">🔐</div>
+                    <h3>Authentication</h3>
+                    <p>Login, logout, and signup flows with session management. Test credential validation, error messages, and protected route redirects.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-wrap" style="background: rgba(59,130,246,0.15);">🔌</div>
+                    <h3>REST API Endpoints</h3>
+                    <p>Node.js Express backend with real API responses. Test HTTP interactions, form submissions and file upload APIs — great for API testing practice too.</p>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ── CTA ── -->
+
+        <section class="cta-section">
+            <div class="cta-card">
+                <h2>Ready to Automate?</h2>
+                <p>Sign up for free and start practising with our 7 practice modules immediately.</p>
+                <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+                    <a href="/signup" class="btn btn-primary btn-lg">Create Free Account</a>
+                    <a href="/login" class="btn btn-outline btn-lg">I Have an Account</a>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ── FOOTER ── -->
+
+        <footer>
+            <p>
+                🤖 <strong>AutomationLab</strong> — Built for Selenium &amp; Playwright Practice &nbsp;|&nbsp;
+                Test Credentials: <span>testuser</span> / <span>Test@1234</span>
+            </p>
+        </footer>
+
+    </div>
+
+
+    <!-- Toast container -->
+    <div id="toast-container"></div>
+
+    <script>
+        // Check if user is already logged in
+        async function checkAuth() {
+            try {
+                const res = await fetch('/api/me');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success) {
+                        document.getElementById('navLoginBtn').style.display  = 'none';
+                        document.getElementById('navSignupBtn').style.display = 'none';
+                        document.getElementById('navDashBtn').style.display   = 'inline-flex';
+                    }
+                }
+            } catch (e) {}
+        }
+
+        checkAuth();
+
+        function goToDashboard(module) {
+            fetch('/api/me').then(r => r.json()).then(data => {
+                if (data.success) {
+                    window.location.href = '/dashboard?module=' + module;
+                } else {
+                    window.location.href = '/login?redirect=dashboard&module=' + module;
+                }
+            });
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const target = document.querySelector(a.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+
+</body>
+</html>
